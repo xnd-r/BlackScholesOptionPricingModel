@@ -124,11 +124,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\etc\CLI\CLI.h" />
+    <ClInclude Include="..\etc\MathStat\ChiSquared.h" />
+    <ClInclude Include="..\etc\MathStat\MathStat.h" />
+    <ClInclude Include="..\etc\RNG\RNG.h" />
+    <ClInclude Include="..\etc\RowTable\RowTable.h" />
     <ClInclude Include="..\include\BlackScholes.h" />
+    <ClInclude Include="..\modules\EuropeanOption\include\O10_EuropeanOption.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S20_AnSimple.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S21_AnExtended.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S30_NumMethods.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S31_NumMethodsW.h" />
+    <ClInclude Include="..\modules\StockPriece\include\S32_NumMethodsWZ.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\application\main.cpp" />
+    <ClCompile Include="..\etc\CLI\CLI.cpp" />
+    <ClCompile Include="..\etc\MathStat\ChiSquared.cpp" />
+    <ClCompile Include="..\etc\MathStat\MathStat.cpp" />
+    <ClCompile Include="..\etc\RNG\RNG.cpp" />
+    <ClCompile Include="..\etc\RowTable\RowTable.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\src\O10_EuropeanOption.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\S20_AnSimple.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\S21_AnExtended.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\S30_NumMethods.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\S31_NumMethodsW.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\S32_NumMethodsWZ.cpp" />
+    <ClCompile Include="..\modules\StockPriece\src\Wiener.cpp" />
     <ClCompile Include="..\src\BlackSholes.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

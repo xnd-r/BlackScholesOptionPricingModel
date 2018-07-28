@@ -9,15 +9,10 @@
 // TODO: add paths to the properties
 
 #define TIME		3.0		// option execute time (years)
-#define NPATHS		50	// amo of trajectories
-#define PART_PATH	20 // amo of paths to build avg trajectory of stock priece
-
 #define SIG			0.2		// volatility; percent per year 0.2 -> 20%
 #define R			0.05	// the interest rate; percent per year 0.05 -> 5%		
 #define S0			100.0	// option price at t == 0
 
-#define NSTEPS		300 
-#define __SEED__	20000000	
 
 
 class BlackSholes {
@@ -27,8 +22,8 @@ class BlackSholes {
 public:
 	//BlackSholes();
 	//~BlackSholes();
-	virtual void GetStockPriece();
-	virtual void GetOptPriece();
+	virtual void SimulateStockPrices();
+	virtual void GetOptionPriece();
 };
 
 #endif // !____BLACK_SHOLES_MARKET_MODEL____
