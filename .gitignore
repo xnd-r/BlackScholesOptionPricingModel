@@ -11,6 +11,8 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+3rdparty/gtest/gtest-all.cc
+3rdparty/gtest/gtest.h
 
 # Build results
 [Dd]ebug/
