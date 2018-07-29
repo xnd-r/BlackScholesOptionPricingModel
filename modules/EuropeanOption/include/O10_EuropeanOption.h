@@ -12,7 +12,7 @@
 
 #include "../../../include/BlackScholes.h"
 
-class EuropeanOption : public BlackSholes {
+class EuropeanOption : public BlackSñholes {
 
 public:
 

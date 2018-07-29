@@ -15,7 +15,7 @@ void AnExtended::SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, dou
 	delete[] wiener_diff;
 }
 
-void AnExtended::SimulateStockPricesExt(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double **sBuffer) {
+void AnExtended::SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double **sBuffer) {
 	// simulating stock priese according to an intermediate values of segment 
 	double *wiener_diff = new double[nSteps + 1];
 
@@ -30,7 +30,7 @@ void AnExtended::SimulateStockPricesExt(VSLStreamStatePtr stream, int nPaths, in
 	}
 }
 
-void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns, int partRows) {
+void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns) {
 
 	time_t rawtime;
 	time(&rawtime);
@@ -61,10 +61,10 @@ void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns, int partRo
 	double tmp_avg;
 	for (int i = 0; i < nColumns; i++) {
 		tmp_avg = 0.0;
-		for (int j = 0; j < partRows; j++) {
+		for (int j = 0; j < nRows; j++) {
 			tmp_avg += buffer[j][i];
 		}
-		tmp_avg /= partRows;
+		tmp_avg /= nRows;
 		std::string tmp_cell = std::to_string(tmp_avg);
 		for (std::string::iterator it = tmp_cell.begin(); it < tmp_cell.end(); ++it) {
 			std::replace(tmp_cell.begin(), tmp_cell.end(), '.', ',');
@@ -73,4 +73,18 @@ void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns, int partRo
 	}
 	fprintf(f, "\n");
 	fclose(f);
+}
+
+void AnExtended::Execute() {
+	VSLStreamStatePtr stream = InitGen();
+	double **sBuffer = new double*[NPATHS];
+	for (int i = 0; i < NPATHS; i++)
+		sBuffer[i] = new double[NSTEPS + 1];
+	SimulateStockPrices(stream, NPATHS, NSTEPS, TIME,
+		sBuffer);
+	WriteToCsv(sBuffer, NPATHS, NSTEPS + 1);
+	for (int i = 0; i < NPATHS; i++)
+		delete[] sBuffer[i];
+	delete[] sBuffer;
+	FreeGen(stream);
 }

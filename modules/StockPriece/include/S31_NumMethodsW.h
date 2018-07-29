@@ -3,11 +3,18 @@
 
 #include "S30_NumMethods.h"
 
+
 class  NumMethodW : public NumMethods {
 public:
-	virtual double Step(double S, double dt, double dw, double dz) = 0;
-	void SimulateStockPricesNumAn(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
-	void SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer);
+	typedef double(NumMethodW::*Step) (double, double, double);
+
+	//Step step_array[] = { EulMarStep, MilsteinStep, RK1Step };
+
+	double EulMarStep(double S, double dt, double dw);
+	double MilsteinStep(double S, double dt, double dw);
+	double RK1Step(double S, double dt, double dw);
+
+	void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
 };
 
 #endif // !____NUMERICAL_METHODS_W____

@@ -1,24 +1,24 @@
 #include "../include/S10_Wiener.h"
 
-VSLStreamStatePtr StockPriece::InitGen() {
+VSLStreamStatePtr StockPrice::InitGen() {
 	VSLStreamStatePtr stream;
 	const unsigned int seed[2] = { __SEED__, __SEED__ };
 	vslNewStreamEx(&stream, VSL_BRNG_MCG59, 2, seed); // base RNG 
 	return stream;
 }
 
-void StockPriece::FreeGen(VSLStreamStatePtr stream) { // deleting of datastructure of gen
+void StockPrice::FreeGen(VSLStreamStatePtr stream) { // deleting of datastructure of gen
 	vslDeleteStream(&stream); // is it really needed to write one-row func?
 }
 
-void StockPriece::GenerateGauss(double expect_val, double deviation, int amou,
+void StockPrice::GenerateGauss(double expect_val, double deviation, int amou,
 	VSLStreamStatePtr stream, double *dest_array) {
 	//Getting amount random values and writing them to the destination array
 	vdRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, amou, dest_array, expect_val, deviation);
 }
 
 
-void StockPriece::SimulateWienerProcess(int nPaths, int nSteps, double Time, double **buffer) {
+void StockPrice::SimulateWienerProcess(int nPaths, int nSteps, double Time, double **buffer) {
 
 	VSLStreamStatePtr stream = InitGen();
 
@@ -37,7 +37,7 @@ void StockPriece::SimulateWienerProcess(int nPaths, int nSteps, double Time, dou
 	FreeGen(stream); // Generator data sturcture deleting
 }
 
-void StockPriece::WriteToCsv(double **buffer, int nRows, int nColumns) {
+void StockPrice::WriteToCsv(double **buffer, int nRows, int nColumns) {
 
 	time_t rawtime;
 	time(&rawtime);
@@ -67,17 +67,13 @@ void StockPriece::WriteToCsv(double **buffer, int nRows, int nColumns) {
 	}
 	fclose(f);
 }
-
-
-void StockPriece::PrintToFile(double **buffer, int nRows, int nColumns,
-	char * FileName)
-{
-	FILE *f = fopen(FileName, "w");
-	for (int i = 0; i < nRows; i++)
-	{
-		for (int j = 0; j < nColumns; j++)
-			fprintf(f, "%lf;", buffer[i][j]);
-		fprintf(f, "\n");
-	}
-	fclose(f);
+void StockPrice::Execute() {
+	double **buffer = new double*[NPATHS];
+	for (int i = 0; i < NPATHS; i++)
+		buffer[i] = new double[NSTEPS + 1];
+	SimulateWienerProcess(NPATHS, NSTEPS, TIME, buffer);
+	WriteToCsv(buffer, NPATHS, NSTEPS + 1);
+	for (int i = 0; i < NPATHS; i++)
+		delete[] buffer[i];
+	delete[] buffer;
 }

@@ -152,7 +152,7 @@
     <ClCompile Include="..\modules\StockPriece\src\S31_NumMethodsW.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S32_NumMethodsWZ.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\Wiener.cpp" />
-    <ClCompile Include="..\src\BlackSholes.cpp" />
+    <ClCompile Include="..\src\BlackScholes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

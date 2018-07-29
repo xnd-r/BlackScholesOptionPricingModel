@@ -1,9 +1,5 @@
 #include "../include/S20_AnSimple.h"
 
-double AnSimple::GetStockPrice(double z, double t) { // analitycal solution
-	return S0 * exp((R - SIG * SIG / 2.0) * t + SIG * z);
-}
-
 double AnSimple::SimulateStockPrices(int nPaths, double Time, double *sBuffer) {
 	VSLStreamStatePtr stream = InitGen();
 
@@ -23,13 +19,13 @@ double AnSimple::SimulateStockPrices(int nPaths, double Time, double *sBuffer) {
 	return sum;
 }
 
-void AnSimple::WriteToCsv(double *buffer, int nRows, int Time) {
+void AnSimple::WriteToCsv(double *buffer, int nRows, int Time, double avg) {
 
 	time_t rawtime;
 	time(&rawtime);
 	std::string date = asctime(localtime(&rawtime));
 	date.pop_back();
-	date.append("GBM_Analitycal_Simple.csv");
+	date.append("_GBM_Analitycal_Simple.csv");
 
 	for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
 		if (*it == ':') {
@@ -48,6 +44,14 @@ void AnSimple::WriteToCsv(double *buffer, int nRows, int Time) {
 		fprintf(f, /*"%lf;\n"*/"%s;", /*buffer[j]*/tmp_cell.c_str());
 	}
 	fprintf(f, "\n");
-	fprintf(f, "Average price = %lf;\n", SimulateStockPrices(nRows, Time, buffer));
+	fprintf(f, "Average price = %lf;\n", avg);
 	fclose(f);
+}
+
+void AnSimple::Execute() {
+	double *sBuffer = new double[NPATHS];
+	double avg = SimulateStockPrices(NPATHS, TIME, sBuffer);
+	WriteToCsv(sBuffer, NPATHS, NSTEPS, avg);
+	printf("Average price = %lf\n", avg);
+	delete[] sBuffer;
 }
