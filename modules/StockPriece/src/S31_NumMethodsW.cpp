@@ -1,6 +1,6 @@
 #include "../include/S31_NumMethodsW.h"
 
-//NumMethodW::Step step_array[3] = { NumMethodW::EulMarStep, MilsteinStep, RK1Step };
+
 
 double NumMethodW::EulMarStep(double S, double dt, double dw) {
 	return S + S * (R * dt + SIG * dw);
@@ -36,7 +36,7 @@ void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int n
 			for (int k = 0; k < numMethodSteps; k++) {
 				t = t + h;
 				index = index + scale;
-				S_Num[j] = _step(S_Num[j], h, w_traject[index] - w_traject[index - scale]);
+				S_Num[j] = (this->*_step)(S_Num[j], h, w_traject[index] - w_traject[index - scale]);
 			}
 
 			Error[j] = Error[j] + fabs(S_An - S_Num[j]);
@@ -47,4 +47,18 @@ void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int n
 	for (int j = 0; j < 8; j++)
 		Error[j] = Error[j] / nPaths;
 	delete[] w_traject;
+}
+
+void NumMethodW::Execute(Step _step) {
+	VSLStreamStatePtr stream = InitGen(); 
+	double *Error = new double[8]; 
+	for (int i = 0; i < 8; i++) 
+		Error[i] = 0.0; 
+
+	SimulateStockPrices(_step, stream, NPATHS, NSTEPS, TIME, Error);
+	WriteToCsv(Error, NSTEPS, 8, TIME, 128, "_Euler_Marayama.csv");
+	for (int i = 0; i < 8; i++) 
+		printf("Error %d = %lf\n", i + 1, Error[i]); 
+	delete [] Error; 
+FreeGen(stream);
 }

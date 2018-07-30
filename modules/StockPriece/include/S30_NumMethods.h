@@ -8,7 +8,7 @@ class  NumMethods : public AnExtended {
 #define NPATHS 1000
 #define NSTEPS 512
 public:
-	virtual void SimulateStockPrices() = 0;
+//	virtual void SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
 	void WriteToCsv(double* Errors, int nSteps, int nRows, double Time, int scale, char* FileName);
 };
 
