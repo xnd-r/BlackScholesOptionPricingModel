@@ -19,7 +19,7 @@ int main() {
 	std::cout << "AnExtended Success" << std::endl;
 
 	NumMethodW nmw;
-	nmw.Execute(nmw.step_array[0]);
+	nmw.Execute(nmw.step_array[0], "_Euler_Marayama.csv");
 	std::cout << "Euler Method Success" << std::endl;
 
 	system("pause");
