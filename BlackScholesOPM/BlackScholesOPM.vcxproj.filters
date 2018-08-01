@@ -15,10 +15,46 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\BlackSholes.cpp">
+    <ClCompile Include="..\application\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\application\main.cpp">
+    <ClCompile Include="..\modules\StockPriece\src\Wiener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\StockPriece\src\S20_AnSimple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\StockPriece\src\S21_AnExtended.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\StockPriece\src\S30_NumMethods.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\etc\RowTable\RowTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\StockPriece\src\S31_NumMethodsW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\StockPriece\src\S32_NumMethodsWZ.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\etc\CLI\CLI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\etc\MathStat\ChiSquared.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\etc\MathStat\MathStat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\etc\RNG\RNG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\src\O10_EuropeanOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BlackScholes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,5 +62,44 @@
     <ClInclude Include="..\include\BlackScholes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S20_AnSimple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S21_AnExtended.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S30_NumMethods.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\etc\RowTable\RowTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S31_NumMethodsW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\StockPriece\include\S32_NumMethodsWZ.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\etc\CLI\CLI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\etc\MathStat\ChiSquared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\etc\MathStat\MathStat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\etc\RNG\RNG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\include\O10_EuropeanOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
