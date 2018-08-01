@@ -28,6 +28,7 @@ void StockPrice::SimulateWienerProcess(int nPaths, int nSteps, double Time, doub
 	for (int i = 0; i < nPaths; i++) {
 		// getting nSteps random values with N(0, h)
 		GenerateGauss(0, sqrt(h), nSteps, stream, wiener_diff);
+		// TODO: Add N(0, h) correcthness
 		buffer[i][0] = 0;
 		for (int j = 1; j <= nSteps; j++) {
 			buffer[i][j] = buffer[i][j - 1] + wiener_diff[j - 1];

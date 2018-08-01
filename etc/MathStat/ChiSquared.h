@@ -3,7 +3,7 @@
 
 #include "MathStat.h"
 
-class ChiSquared : public MathStat {
+class ChiSquared : public RVCharacteristics {
 public:
 };
 
