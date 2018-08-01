@@ -12,9 +12,10 @@ public:
 	double BurragePlatenStep(double S, double dt, double dw, double dz);
 	double Taylor2Step(double S, double dt, double dw, double dz);
 
+	void SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer);
 	void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
 
-	void Execute(Step _step);
+	void Execute(Step _step, char* FileName);
 };
 
 #endif // !____NUMERICAL_METHODS_W_AND_Z____
