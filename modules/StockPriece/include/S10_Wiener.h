@@ -14,7 +14,6 @@
 
 #define NPATHS		50	// amo of trajectories
 #define NSTEPS		300 
-#define _EPSILON_	5E-06 // calculations accuracy
 
 class StockPrice : public BlackSñholes {
 
