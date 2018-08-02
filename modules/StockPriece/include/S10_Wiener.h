@@ -7,6 +7,7 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #include "../../../include/BlackScholes.h"
 #include "../../../etc/RowTable/RowTable.h"
@@ -17,7 +18,7 @@
 class StockPrice : public BlackSñholes {
 
 public:
-
+	std::vector<double> WienerTraject;
 	VSLStreamStatePtr InitGen();
 	void FreeGen(VSLStreamStatePtr stream);
 	void GenerateGauss(double expect_val, double deviation, int amou, VSLStreamStatePtr stream, double *dest_array);
