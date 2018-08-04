@@ -17,11 +17,11 @@ public:
 	double* wd_sorted;
 	int len;
 
-	double ExpValCh;
+	double MeanCh;
 	double VarCh;
 	double MedCh;
 
-	double ExpValTh;
+	double MeanTh;
 	double VarTh;
 	double MedTh;
 
@@ -31,7 +31,7 @@ public:
 	RVCharacteristics(double* wd, int _len, double _h);
 	// TODO: add gist, output(everything), graph, Chi-squared...  
 
-	double GetExpectedVal();
+	double GetMean();
 	double GetVariance();
 	double GetMediane();
 	bool IsExpValCorrect(double _eps);

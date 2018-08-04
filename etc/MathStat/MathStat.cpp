@@ -5,15 +5,15 @@ RVCharacteristics::RVCharacteristics(double* wd, int _len, double _h) {
 	len = _len;
 	VarTh = _h;
 	wd_sorted = wd;
-	ExpValTh = 0.0;
+	MeanTh = 0.0;
 
-	ExpValCh = this->GetExpectedVal();
+	MeanCh = this->GetMean();
 	VarCh = GetVariance();
 	MedTh = GetMediane();
 	VarDiff = abs(VarCh - VarTh);
 }
 
-double RVCharacteristics::GetExpectedVal() {
+double RVCharacteristics::GetMean() {
 	double res = 0.0;
 	for (int i = 0; i < len; ++i)
 		res += wd_sorted[i];
@@ -21,13 +21,13 @@ double RVCharacteristics::GetExpectedVal() {
 }
 
 bool RVCharacteristics::IsExpValCorrect(double _eps) {
-	return GetExpectedVal() < _eps ? true : false;
+	return GetMean() < _eps ? true : false;
 }
 
 double RVCharacteristics::GetVariance() {
 	double res = 0.0;
 	for (int i = 0; i < len; ++i) {
-		res += pow(wd_sorted[i] - ExpValCh, 2);
+		res += pow(wd_sorted[i] - MeanCh, 2);
 	}
 	return res / (double)len;
 }
@@ -94,7 +94,7 @@ void RVCharacteristics::WriteToCsv(double eps) {
 		fprintf(f, "\n");
 	}
 	fprintf(f, "\n");
-	fprintf(f, "ExpectedVal: %lf;\n", ExpValCh);
+	fprintf(f, "ExpectedVal: %lf;\n", MeanCh);
 	fprintf(f, "Variance: %lf;\n", VarCh);
 	fprintf(f, "Step: %lf;\n", VarTh);
 	fprintf(f, "Variance Difference: %lf;\n", VarDiff);

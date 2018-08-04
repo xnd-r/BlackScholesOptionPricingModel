@@ -9,14 +9,14 @@
 #include <string>
 #include <vector>
 
-#include "../../../include/BlackScholes.h"
+#include "../../../include/B00_BlackScholes.h"
 #include "../../../etc/RowTable/RowTable.h"
 
 #define NPATHS		50	// amo of trajectories
 #define NSTEPS		300 
 
-class StockPrice : public BlackSñholes {
-
+class StockPrice : public BlackScholes {
+	
 public:
 	std::vector<double> WienerTraject;
 	VSLStreamStatePtr InitGen();

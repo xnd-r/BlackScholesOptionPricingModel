@@ -12,7 +12,7 @@ double NumMethodWZ::Taylor2Step(double S, double dt, double dw, double dz) {
 		R * SIG * dz + 0.5 * R * R * dt * dt + R * SIG * (dw * dt - dz));
 }
 
-void NumMethodWZ::SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer) {
+void NumMethodWZ::SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, double Time, float *buffer) {
 	double *dw = new double[nSteps * 2];
 
 	double h = Time / (double)nSteps;
@@ -37,7 +37,7 @@ void NumMethodWZ::SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, d
 }
 
 void NumMethodWZ::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error) {
-	double *w_traject = new double[(nSteps + 1) * 2];
+	float *w_traject = new float[(nSteps + 1) * 2];
 
 	for (int i = 0; i < nPaths; i++) {
 		SimulateWandZProcesses(stream, nSteps, Time, w_traject);
