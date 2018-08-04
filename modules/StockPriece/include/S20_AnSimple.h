@@ -6,8 +6,8 @@
 class AnSimple : public StockPrice {
 #define NPATHS 10000
 public:
-	virtual void WriteToCsv(double *buffer, int nRows, int nColumns, double avg);
-	double SimulateStockPrices(int nPaths, double Time, double *sBuffer);
+	virtual void WriteToCsv(float *buffer, int nRows, int nColumns, float avg);
+	__declspec(noinline) float SimulateStockPrices(int nPaths, float Time, float *sBuffer);
 	void Execute();
 };
 

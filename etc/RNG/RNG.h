@@ -4,8 +4,6 @@
 #include <math.h>
 
 class  RNG {
-
-
 public:
 };
 

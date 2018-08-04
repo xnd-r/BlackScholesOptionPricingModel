@@ -18,13 +18,12 @@
 class StockPrice : public BlackScholes {
 	
 public:
-	std::vector<double> WienerTraject;
+	std::vector<float> WienerTraject;
 	VSLStreamStatePtr InitGen();
 	void FreeGen(VSLStreamStatePtr stream);
-	void GenerateGauss(double expect_val, double deviation, int amou, VSLStreamStatePtr stream, double *dest_array);
-	
-	virtual void SimulateWienerProcess(int nPaths, int nSteps, double Time, double **buffer);
-	virtual void WriteToCsv(double **buffer, int nRows, int nColumns);
+	__declspec(noinline) void GenerateGauss(float expect_val, float deviation, int amou, VSLStreamStatePtr stream, float *dest_array);
+	__declspec(noinline) virtual void SimulateWienerProcess(int nPaths, int nSteps, float Time, float **buffer);
+	virtual void WriteToCsv(float **buffer, int nRows, int nColumns);
 	void Execute();
 };
 

@@ -12,14 +12,12 @@
 #endif
 
 
-#define TIME		3.0f		// option execute time (years)
-#define SIG			0.2f		// volatility; percent per year 0.2 -> 20%
+#define TIME		3.0f	// option execute time (years)
+#define SIG			0.2f	// volatility; percent per year 0.2 -> 20%
 #define R			0.05f	// the interest rate; percent per year 0.05 -> 5%		
 #define S0			100.0f	// option price at t == 0
 
 #define __SEED__	20000000	
-
-
 
 
 class BlackScholes {

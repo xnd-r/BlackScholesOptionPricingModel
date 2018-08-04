@@ -1,35 +1,40 @@
 #include "../include/S31_NumMethodsW.h"
 
-double NumMethodW::EulMarStep(double S, double dt, double dw) {
+float NumMethodW::EulMarStep(float S, float dt, float dw) {
 	return S + S * (R * dt + SIG * dw);
 }
 
-double NumMethodW::MilsteinStep(double S, double dt, double dw) {
+float NumMethodW::MilsteinStep(float S, float dt, float dw) {
 	return S + S * (R * dt + SIG * dw) +
-		0.5 * S * SIG * SIG * (dw * dw - dt);
+		0.5f * S * SIG * SIG * (dw * dw - dt);
 }
 
-double NumMethodW::RK1Step(double S, double dt, double dw) {
-	return S + S * (R * dt + SIG * dw) + 0.5 * (SIG * SIG * sqrt(dt)) * (dw * dw - dt);
+float NumMethodW::RK1Step(float S, float dt, float dw) {
+	return S + S * (R * dt + SIG * dw) + 0.5f * (SIG * SIG * sqrt(dt)) * (dw * dw - dt);
 }
 
-void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error)
+__declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float *Error)
 {
-	double *w_traject = new double[nSteps + 1];
+	float *w_traject = new float[nSteps + 1];
+
+	#if defined(__INTEL_COMPILER) 
+		#pragma simd
+		#pragma vector always	
+	#endif
 
 	for (int i = 0; i < nPaths; i++) {
 		SimulateWienerProcess(stream, nSteps, Time, w_traject);
 
-		double S_An = GetStockPrice(w_traject[nSteps], Time);
+		float S_An = GetStockPrice(w_traject[nSteps], Time);
 
-		double S_Num[8]; // array of S(t) for different scaling 
+		float S_Num[8]; // array of S(t) for different scaling 
 		int scale = 128;
 
 		for (int j = 0; j < 8; j++) {
 			S_Num[j] = S0;
 			int numMethodSteps = nSteps / scale;
-			double h = Time / (double)numMethodSteps;
-			double t = 0;
+			float h = Time / (float)numMethodSteps;
+			float t = 0;
 			int index = 0;
 			for (int k = 0; k < numMethodSteps; k++) {
 				t = t + h;
@@ -49,7 +54,7 @@ void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int n
 
 void NumMethodW::Execute(Step _step, char* FileName) {
 	VSLStreamStatePtr stream = InitGen(); 
-	double *Error = new double[8]; 
+	float *Error = new float[8]; 
 	for (int i = 0; i < 8; i++) 
 		Error[i] = 0.0; 
 

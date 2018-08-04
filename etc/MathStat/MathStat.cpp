@@ -1,6 +1,6 @@
 #include "MathStat.h"
 
-RVCharacteristics::RVCharacteristics(double* wd, int _len, double _h) {
+RVCharacteristics::RVCharacteristics(float* wd, int _len, float _h) {
 	QuickSort(wd, 0, _len - 1);
 	len = _len;
 	VarTh = _h;
@@ -13,43 +13,43 @@ RVCharacteristics::RVCharacteristics(double* wd, int _len, double _h) {
 	VarDiff = abs(VarCh - VarTh);
 }
 
-double RVCharacteristics::GetMean() {
-	double res = 0.0;
+float RVCharacteristics::GetMean() {
+	float res = 0.0;
 	for (int i = 0; i < len; ++i)
 		res += wd_sorted[i];
-	return res / (double)len;
+	return res / (float)len;
 }
 
-bool RVCharacteristics::IsExpValCorrect(double _eps) {
+bool RVCharacteristics::IsExpValCorrect(float _eps) {
 	return GetMean() < _eps ? true : false;
 }
 
-double RVCharacteristics::GetVariance() {
-	double res = 0.0;
+float RVCharacteristics::GetVariance() {
+	float res = 0.0;
 	for (int i = 0; i < len; ++i) {
 		res += pow(wd_sorted[i] - MeanCh, 2);
 	}
-	return res / (double)len;
+	return res / (float)len;
 }
 
-bool RVCharacteristics::IsVArianceCorrect(double var, double _eps) {
+bool RVCharacteristics::IsVArianceCorrect(float var, float _eps) {
 	return abs(var - GetVariance()) < _eps ? true : false;
 }
 
-double RVCharacteristics::GetMediane() {
+float RVCharacteristics::GetMediane() {
 	
 	return len % 2 == 0 ? (wd_sorted[len / 2] + wd_sorted[(len / 2) - 1]) : wd_sorted[((len + 1)/ 2) - 1];
 }
 
 
-void RVCharacteristics::QuickSort(double* array, int first, int last) {
+void RVCharacteristics::QuickSort(float* array, int first, int last) {
 
 	int i = first;
 	int j = last;
 	srand(time(0));
 	auto random = rand;
 	int randElem = random();
-	double base = array[(randElem % (last - first)) + first];
+	float base = array[(randElem % (last - first)) + first];
 
 	do {
 		while (array[i] < base) i++;
@@ -69,7 +69,7 @@ void RVCharacteristics::QuickSort(double* array, int first, int last) {
 		QuickSort(array, first, j);
 }
 
-void RVCharacteristics::WriteToCsv(double eps) {
+void RVCharacteristics::WriteToCsv(float eps) {
 	time_t rawtime;
 	time(&rawtime);
 	std::string date = asctime(localtime(&rawtime));
@@ -108,8 +108,8 @@ void RVCharacteristics::Execute() {
 	//StockPrice sp;
 	//VSLStreamStatePtr stream = sp.InitGen();
 
-	//double *wiener_diff = new double[NSTEPS]; // Random values buffer
-	//double h = TIME / (double)NSTEPS; // step
+	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
+	//float h = TIME / (float)NSTEPS; // step
 
 	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff);
 	//WriteToCsv(_EPSILON_);

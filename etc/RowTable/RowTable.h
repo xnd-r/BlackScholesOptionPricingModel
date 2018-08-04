@@ -5,13 +5,13 @@
 #include <math.h>
 
 struct row_table {
-	double error;
+	float error;
 	int nSteps;
 	int scale;
 	int nRows;
-	double time;
+	float time;
 
-	void SetValues(double e, int nst, int sc, int nr, double t);
+	void SetValues(float e, int nst, int sc, int nr, float t);
 	std::string CreateString();
 
 };

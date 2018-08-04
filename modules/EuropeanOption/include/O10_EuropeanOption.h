@@ -13,7 +13,6 @@
 #include "../../../include/B00_BlackScholes.h"
 
 class EuropeanOption : public BlackScholes {
-
 public:
 
 };
