@@ -1,6 +1,6 @@
 #include "../include/S30_NumMethods.h"
 
-void NumMethods::WriteToCsv(double* Errors, int nSteps, int nRows, double Time, int scale, char* FileName) {
+void NumMethods::WriteToCsv(float* Errors, int nSteps, int nRows, float Time, int scale, char* FileName) {
 	
 	row_table rt;
 	time_t rawtime;

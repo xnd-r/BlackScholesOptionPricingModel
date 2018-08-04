@@ -1,7 +1,7 @@
 #ifndef ____STATISTICS____
 #define ____STATISTICS____
 
-#define _EPSILON_	5E-03 // calculations accuracy
+#define _EPSILON_	5E-03f // calculations accuracy
 
 #include <vector>
 #include <time.h>
@@ -14,30 +14,30 @@
 class RVCharacteristics
 {
 public:
-	double* wd_sorted;
+	float* wd_sorted;
 	int len;
 
-	double ExpValCh;
-	double VarCh;
-	double MedCh;
+	float MeanCh;
+	float VarCh;
+	float MedCh;
 
-	double ExpValTh;
-	double VarTh;
-	double MedTh;
+	float MeanTh;
+	float VarTh;
+	float MedTh;
 
-	double VarDiff;
+	float VarDiff;
 
 public:
-	RVCharacteristics(double* wd, int _len, double _h);
+	RVCharacteristics(float* wd, int _len, float _h);
 	// TODO: add gist, output(everything), graph, Chi-squared...  
 
-	double GetExpectedVal();
-	double GetVariance();
-	double GetMediane();
-	bool IsExpValCorrect(double _eps);
-	bool IsVArianceCorrect(double var, double _eps);
-	void QuickSort(double* array, int first, int last);
-	void WriteToCsv(double eps);
+	float GetMean();
+	float GetVariance();
+	float GetMediane();
+	bool IsExpValCorrect(float _eps);
+	bool IsVArianceCorrect(float var, float _eps);
+	void QuickSort(float* array, int first, int last);
+	void WriteToCsv(float eps);
 	void Execute();
 };
 

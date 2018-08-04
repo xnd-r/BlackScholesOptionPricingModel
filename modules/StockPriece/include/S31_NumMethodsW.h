@@ -5,15 +5,15 @@
 
 class  NumMethodW : public NumMethods {
 public:
-	typedef double(NumMethodW::*Step) (double, double, double);
+	typedef float(NumMethodW::*Step) (float, float, float);
 
 	NumMethodW::Step step_array[3] = { &NumMethodW::EulMarStep, &NumMethodW::MilsteinStep, &NumMethodW::RK1Step };
 
-	double EulMarStep(double S, double dt, double dw);
-	double MilsteinStep(double S, double dt, double dw);
-	double RK1Step(double S, double dt, double dw);
+	float EulMarStep(float S, float dt, float dw);
+	float MilsteinStep(float S, float dt, float dw);
+	float RK1Step(float S, float dt, float dw);
 
-	void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
+	__declspec(noinline) void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float *Error);
 
 	void Execute(Step _step, char* FileName);
 };

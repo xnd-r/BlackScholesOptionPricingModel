@@ -10,10 +10,9 @@
 #include <string>
 #include "mkl.h"
 
-#include "../../../include/BlackScholes.h"
+#include "../../../include/B00_BlackScholes.h"
 
-class EuropeanOption : public BlackSñholes {
-
+class EuropeanOption : public BlackScholes {
 public:
 
 };

@@ -1,10 +1,10 @@
 #include "../include/S21_AnExtended.h"
 
-void AnExtended::SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer) {
+__declspec(noinline) void AnExtended::SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, float Time, float *buffer) {
 
-	double *wiener_diff = new double[nSteps]; // Random values buffer
+	float *wiener_diff = new float[nSteps]; // Random values buffer
 
-	double h = Time / (double)nSteps; // step
+	float h = Time / (float)nSteps; // step
 
 	GenerateGauss(0, sqrt(h), nSteps, stream, wiener_diff); buffer[0] = 0;
 	// getting nSteps random values with N(0, h)
@@ -15,11 +15,11 @@ void AnExtended::SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, dou
 	delete[] wiener_diff;
 }
 
-void AnExtended::SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double **sBuffer) {
+__declspec(noinline) void AnExtended::SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float **sBuffer) {
 	// simulating stock priese according to an intermediate values of segment 
-	double *wiener_diff = new double[nSteps + 1];
+	float *wiener_diff = new float[nSteps + 1];
 
-	double h = Time / (double)nSteps; // step
+	float h = Time / (float)nSteps; // step
 	for (int i = 0; i < nPaths; i++) {
 		// Wiener process trajectory simulating
 		SimulateWienerProcess(stream, nSteps, Time, wiener_diff);
@@ -30,7 +30,7 @@ void AnExtended::SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int n
 	}
 }
 
-void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns) {
+void AnExtended::WriteToCsv(float **buffer, int nRows, int nColumns) {
 
 	time_t rawtime;
 	time(&rawtime);
@@ -58,7 +58,13 @@ void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns) {
 		}
 		fprintf(f, "\n");
 	}
-	double tmp_avg;
+	float tmp_avg;
+
+	#if defined(__INTEL_COMPILER) 
+		#pragma simd
+		#pragma vector always	
+	#endif
+
 	for (int i = 0; i < nColumns; i++) {
 		tmp_avg = 0.0;
 		for (int j = 0; j < nRows; j++) {
@@ -77,9 +83,9 @@ void AnExtended::WriteToCsv(double **buffer, int nRows, int nColumns) {
 
 void AnExtended::Execute() {
 	VSLStreamStatePtr stream = InitGen();
-	double **sBuffer = new double*[NPATHS];
+	float **sBuffer = new float*[NPATHS];
 	for (int i = 0; i < NPATHS; i++)
-		sBuffer[i] = new double[NSTEPS + 1];
+		sBuffer[i] = new float[NSTEPS + 1];
 	SimulateStockPrices(stream, NPATHS, NSTEPS, TIME,
 		sBuffer);
 	WriteToCsv(sBuffer, NPATHS, NSTEPS + 1);

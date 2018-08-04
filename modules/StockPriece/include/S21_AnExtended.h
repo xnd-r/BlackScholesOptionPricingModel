@@ -7,9 +7,9 @@ class AnExtended : public AnSimple {
 #define NPATHS 300
 public:
 
-	void SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer);
-	void SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double **sBuffer);
-	void WriteToCsv(double **buffer, int nRows, int nColumns);
+	__declspec(noinline) void SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, float Time, float *buffer);
+	__declspec(noinline) void SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float **sBuffer);
+	void WriteToCsv(float **buffer, int nRows, int nColumns);
 	void Execute();
 };
 

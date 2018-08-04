@@ -9,20 +9,20 @@
 
 int main() { 
 
-	StockPrice sp;
-	VSLStreamStatePtr stream = sp.InitGen();
-
-	double *wiener_diff = new double[NSTEPS]; // Random values buffer
-	double h = TIME / (double)NSTEPS; // step
-
-	sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff);
-	RVCharacteristics rvc(wiener_diff, NSTEPS, h);
-	rvc.WriteToCsv(_EPSILON_);
-	delete[] wiener_diff;
-	sp.FreeGen(stream);
-
 	//StockPrice sp;
-	//sp.Execute();
+	//VSLStreamStatePtr stream = sp.InitGen();
+
+	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
+	//float h = TIME / (float)NSTEPS; // step
+
+	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff);
+	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
+	//rvc.WriteToCsv(_EPSILON_);
+	//delete[] wiener_diff;
+	//sp.FreeGen(stream);
+
+	//StockPrice sp1;
+	//sp1.Execute();
 	//std::cout << "Wiener Success" << std::endl;
 
 	//AnSimple as;

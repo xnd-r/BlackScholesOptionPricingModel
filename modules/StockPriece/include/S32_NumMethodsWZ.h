@@ -5,15 +5,15 @@
 
 class  NumMethodWZ : public NumMethods {
 public:
-	typedef double(NumMethodWZ::*Step) (double, double, double, double);
+	typedef float(NumMethodWZ::*Step) (float, float, float, float);
 
 	NumMethodWZ::Step step_array[2] = { &NumMethodWZ::BurragePlatenStep, &NumMethodWZ::Taylor2Step };
 	
-	double BurragePlatenStep(double S, double dt, double dw, double dz);
-	double Taylor2Step(double S, double dt, double dw, double dz);
+	float BurragePlatenStep(float S, float dt, float dw, float dz);
+	float Taylor2Step(float S, float dt, float dw, float dz);
 
-	void SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, double Time, double *buffer);
-	void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, double Time, double *Error);
+	__declspec(noinline) void SimulateWandZProcesses(VSLStreamStatePtr stream, int nSteps, float Time, float *buffer);
+	__declspec(noinline) void SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float *Error);
 
 	void Execute(Step _step, char* FileName);
 };

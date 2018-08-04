@@ -1,25 +1,32 @@
 #include "../include/S20_AnSimple.h"
 
-double AnSimple::SimulateStockPrices(int nPaths, double Time, double *sBuffer) {
+__declspec(noinline) float AnSimple::SimulateStockPrices(int nPaths, float Time, float *sBuffer) {
+
 	VSLStreamStatePtr stream = InitGen();
 
-	double *wiener_diff = new double[nPaths]; // random values with N(0, Time) buffer
+	float *wiener_diff = new float[nPaths]; // random values with N(0, Time) buffer
 	GenerateGauss(0.0, sqrt(Time), nPaths, stream, wiener_diff);
 	// As W(0)=0 and W(Time) = dW =>
 	// W == dW
 	//result can be calculated as nPath vaues of W(Time)
-	double sum = 0.0;
+	float sum = 0.0f;
+
+	#if defined(__INTEL_COMPILER) 
+		#pragma simd
+		#pragma vector always	
+	#endif
+
 	for (int i = 0; i < nPaths; i++) {
 		sBuffer[i] = GetStockPrice(wiener_diff[i], Time);
 		sum += sBuffer[i];
 	}
-	sum = sum / (double)nPaths;
+	sum = sum / (float)nPaths;
 	FreeGen(stream);
 	delete[] wiener_diff;
 	return sum;
 }
 
-void AnSimple::WriteToCsv(double *buffer, int nRows, int Time, double avg) {
+void AnSimple::WriteToCsv(float *buffer, int nRows, int Time, float avg) {
 
 	time_t rawtime;
 	time(&rawtime);
@@ -49,8 +56,8 @@ void AnSimple::WriteToCsv(double *buffer, int nRows, int Time, double avg) {
 }
 
 void AnSimple::Execute() {
-	double *sBuffer = new double[NPATHS];
-	double avg = SimulateStockPrices(NPATHS, TIME, sBuffer);
+	float *sBuffer = new float[NPATHS];
+	float avg = SimulateStockPrices(NPATHS, TIME, sBuffer);
 	WriteToCsv(sBuffer, NPATHS, NSTEPS, avg);
 	printf("Average price = %lf\n", avg);
 	delete[] sBuffer;
