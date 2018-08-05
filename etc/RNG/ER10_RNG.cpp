@@ -6,13 +6,14 @@ MCG59::MCG59(long long int seed) : a(302875106592253), seed(seed) {
 
 void MCG59::RandomArray(float* _array, int len) {
 	for (int i = 0; i < len; ++i) {
-		seed = (a * seed) % m;
+		seed = abs((a * seed) % m);
 		_array[i] = (float)seed / m;
 	}
 }
 
 float MCG59::GetFloat() {
-	return (float)((a * seed) % m) / m;
+	seed = abs((a * seed) % m);
+	return (float)seed / m;
 }
 
 float MCG59::GetFloatFromRange(float min, float max) {

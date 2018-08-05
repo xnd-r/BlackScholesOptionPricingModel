@@ -5,6 +5,7 @@
 #include "../modules/StockPriece/include/S32_NumMethodsWZ.h"	
 #include "../etc/MathStat/EM10_MathStat.h"
 #include "../etc/RNG/ER10_RNG.h"
+#include "../etc/RNG/ER21_Normal.h"
 
 #include <iostream>
 
@@ -16,20 +17,41 @@ int main() {
 	//mcg.RandomArray(wiener_diff, NSTEPS);
 	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
 	//rvc.WriteToCsv(_EPSILON_);
+	////for (int i = 0; i < NSTEPS; ++i)
+	////	std::cout << wiener_diff[i] << std::endl;
+	////delete[] wiener_diff;
+
+	////float h = TIME / (float)NSTEPS; // step
+	//NormalGen rng(0, h, __SEED__);
+	//float *wiener_diff1 = new float[NSTEPS]; // Random values buffer
+	//float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
+	//rng.RandomArray(wiener_diff1, NSTEPS);
+
+	//RVCharacteristics rvc1(wiener_diff1, NSTEPS, h);
+	//rvc1.WriteToCsv(_EPSILON_);
+
+	//StockPrice sp;
+	//VSLStreamStatePtr stream = sp.InitGen();
+	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff2);
+	//RVCharacteristics rvc2(wiener_diff2, NSTEPS, h);
+	//rvc.WriteToCsv(_EPSILON_);
+
 	//for (int i = 0; i < NSTEPS; ++i)
-	//	std::cout << wiener_diff[i] << std::endl;
+	//	std::cout << wiener_diff[i] << "\t" << wiener_diff1[i] << "\t" << wiener_diff2[i] << std::endl;
+	//delete[] wiener_diff1;
 	//delete[] wiener_diff;
+	//delete[] wiener_diff2;
 
 
 
 	//StockPrice sp;
 	//VSLStreamStatePtr stream = sp.InitGen();
-	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
+	//float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
 	//float h = TIME / (float)NSTEPS; // step
-	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff);
-	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
+	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff2);
+	//RVCharacteristics rvc2(wiener_diff2, NSTEPS, h);
 	//rvc.WriteToCsv(_EPSILON_);
-	//delete[] wiener_diff;
+	//delete[] wiener_diff2;
 	//sp.FreeGen(stream);
 
 	//StockPrice sp1;

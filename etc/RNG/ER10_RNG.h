@@ -1,14 +1,14 @@
 #ifndef ____RANDOM_NUMBER_GENERATOR____
 #define ____RANDOM_NUMBER_GENERATOR____
 
-#include <math.h>
+#include <cmath>
 
 class  MCG59 {
+public:
 	long long int a;
 	long long int m;
 	long long int seed;
 
-public:
 	MCG59() {};
 	MCG59(long long int seed);
 	~MCG59() {};
