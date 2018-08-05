@@ -1,7 +1,7 @@
 #ifndef ____CHI_SQUARED_DISTRIBUTION____
 #define ____CHI_SQUARED_DISTRIBUTION____
 
-#include "MathStat.h"
+#include "EM10_MathStat.h"
 
 class ChiSquared : public RVCharacteristics {
 public:

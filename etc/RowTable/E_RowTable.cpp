@@ -1,4 +1,4 @@
-#include "RowTable.h"
+#include "E_RowTable.h"
 
 void row_table::SetValues(float e, int nst, int sc, int nr, float t) {
 	error = e; 

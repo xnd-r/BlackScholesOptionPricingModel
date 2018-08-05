@@ -3,18 +3,29 @@
 #include "../modules/StockPriece/include/S21_AnExtended.h"
 #include "../modules/StockPriece/include/S31_NumMethodsW.h"	
 #include "../modules/StockPriece/include/S32_NumMethodsWZ.h"	
-#include "../etc/MathStat/MathStat.h"
+#include "../etc/MathStat/EM10_MathStat.h"
+#include "../etc/RNG/ER10_RNG.h"
 
 #include <iostream>
 
 int main() { 
 
-	//StockPrice sp;
-	//VSLStreamStatePtr stream = sp.InitGen();
-
+	//MCG59 mcg(__SEED__);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//float h = TIME / (float)NSTEPS; // step
+	//mcg.RandomArray(wiener_diff, NSTEPS);
+	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
+	//rvc.WriteToCsv(_EPSILON_);
+	//for (int i = 0; i < NSTEPS; ++i)
+	//	std::cout << wiener_diff[i] << std::endl;
+	//delete[] wiener_diff;
 
+
+
+	//StockPrice sp;
+	//VSLStreamStatePtr stream = sp.InitGen();
+	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
+	//float h = TIME / (float)NSTEPS; // step
 	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff);
 	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
 	//rvc.WriteToCsv(_EPSILON_);

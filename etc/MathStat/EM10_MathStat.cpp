@@ -1,4 +1,4 @@
-#include "MathStat.h"
+#include "EM10_MathStat.h"
 
 RVCharacteristics::RVCharacteristics(float* wd, int _len, float _h) {
 	QuickSort(wd, 0, _len - 1);
@@ -9,7 +9,8 @@ RVCharacteristics::RVCharacteristics(float* wd, int _len, float _h) {
 
 	MeanCh = this->GetMean();
 	VarCh = GetVariance();
-	MedTh = GetMediane();
+	MedCh = GetMediane();
+	MedTh = 0.0f;
 	VarDiff = abs(VarCh - VarTh);
 }
 

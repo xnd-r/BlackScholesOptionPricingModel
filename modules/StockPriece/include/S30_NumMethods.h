@@ -2,7 +2,7 @@
 #define ____NUMERICAL_METHODS_____
 
 #include "S21_AnExtended.h"
-#include "../../../etc/RowTable/RowTable.h"
+#include "../../../etc/RowTable/E_RowTable.h"
 
 class  NumMethods : public AnExtended {
 #define NPATHS 1000
