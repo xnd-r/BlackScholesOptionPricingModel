@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../../include/B00_BlackScholes.h"
-#include "../../../etc/RowTable/RowTable.h"
+#include "../../../etc/RowTable/E_RowTable.h"
 
 #define NPATHS		50	// amo of trajectories
 #define NSTEPS		300 
