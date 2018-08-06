@@ -19,7 +19,7 @@ void ChiSquared::SetIntervals() {
 
 void ChiSquared::SetNj() {
 	int counter = 0;
-	arrN = new float[len];
+	arrN = new float[k - 1];
 	for (int i = 0; i < len; ++i)
 	{
 		if (wd_sorted[i] <= arrZ[0])
@@ -51,6 +51,8 @@ float ChiSquared::CDF(float mean, float variance, float x) {
 
 void ChiSquared::SetQj()
 {
+	arrQ = new float[k - 1];
+
 	arrQ[0] = CDF(MeanCh, VarCh, arrZ[0]);
 	for (int i = 1; i < k - 1; ++i)
 	{
@@ -83,4 +85,45 @@ float ChiSquared::ChiSquaredDistribute(int r) // integration of ChiSquaredDencit
 
 char* ChiSquared::IsHypoAccepted() {
 	return 1.0f - ChiSquaredDistribute(k - 1) < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
+}
+
+void ChiSquared::Execute() {
+	SetIntervals();
+	SetNj();
+	SetQj();
+	SetR0();
+	ChiSquaredDistribute(k - 1);
+}
+
+void ChiSquared::WriteToCsv() {
+		time_t rawtime;
+		time(&rawtime);
+		std::string date = asctime(localtime(&rawtime));
+		date.pop_back();
+		date.append("_GBM_Analitycal_Simple.csv");
+
+		for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
+			if (*it == ':') {
+				date.erase(it);
+			}
+			std::replace(date.begin(), date.end(), ' ', '_');
+		}
+
+		FILE *f = fopen(date.c_str(), "w");
+		for (int j = 0; j < k; j++) {
+			std::string tmp_cell = std::to_string(arrZ[j]);
+			std::string tmp_cell2 = std::to_string(arrN[j]);
+ 			std::string tmp_cell3 = std::to_string(arrQ[j]);
+
+			for (std::string::iterator it = tmp_cell.begin(); it<tmp_cell.end(); ++it)
+				std::replace(tmp_cell.begin(), tmp_cell.end(), '.', ',');
+			for (std::string::iterator it = tmp_cell2.begin(); it<tmp_cell2.end(); ++it)
+				std::replace(tmp_cell2.begin(), tmp_cell2.end(), '.', ',');
+			for (std::string::iterator it = tmp_cell3.begin(); it<tmp_cell3.end(); ++it)
+				std::replace(tmp_cell3.begin(), tmp_cell3.end(), '.', ',');
+
+			fprintf(f, /*"%lf;\n"*/"%s;%s;%s;", /*buffer[j]*/tmp_cell.c_str(), tmp_cell2.c_str(), tmp_cell3.c_str());
+		}
+		fprintf(f, "\n");
+		fclose(f);
 }

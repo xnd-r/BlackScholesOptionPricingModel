@@ -20,6 +20,8 @@ public:
 	void SetR0();
 	void SetIntervals();
 	char* IsHypoAccepted();
+	void WriteToCsv();
+	void Execute();
 
 };
 
