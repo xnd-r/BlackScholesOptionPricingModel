@@ -27,7 +27,7 @@ public:
 	~BlackScholes() {};
 	float GetStockPrice(float wiener_diff, float time);
 	virtual void Execute() = 0;
-	//virtual void GetOptionPrice();
+	virtual void TGetOptionPrice();
 };
 
 #endif // !____BLACK_SHOLES_MARKET_MODEL____

@@ -51,9 +51,6 @@
     <ClCompile Include="..\etc\MathStat\EM10_MathStat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\src\O10_EuropeanOption.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\etc\RowTable\E_RowTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -61,6 +58,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\etc\CLI\A_CLI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\src\O00_EuropeanOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\modules\StockPriece\include\S32_NumMethodsWZ.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\include\O10_EuropeanOption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\B00_BlackScholes.h">
@@ -108,6 +111,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\etc\RNG\ER10_RNG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\include\O00_EuropeanOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

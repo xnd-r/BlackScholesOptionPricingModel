@@ -78,7 +78,7 @@ float ChiSquared::ChiSquaredDistribute(int r) // integration of ChiSquaredDencit
 	int n = 1000; // amount of sections in integral calculating
 	for (int k = 1; k <= n; ++k)
 	{
-		res += (ChiSquaredDencity(R0 * (k - 1) / n, r) + ChiSquaredDencity(R0 * k / n, r)) * (R0 / (2.0f * n));
+		res += (ChiSquaredDencity(R0 * (k - 1) / n, R) + ChiSquaredDencity(R0 * k / n, R)) * (R0 / (2.0f * n));
 	}
 	return res;
 }
