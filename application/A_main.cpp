@@ -11,13 +11,23 @@
 #include <iostream>
 
 int main() { 
+
+
+
 	float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	float h = TIME / (float)NSTEPS; // step
 	NormalGen rng(0, h, __SEED__);
 	rng.RandomArray(wiener_diff, NSTEPS);
-	ChiSquared cs(wiener_diff, NSTEPS, h, 102, 0.1f);
+	//rng.WriteToCsv(wiener_diff, NSTEPS);
+	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
+	ChiSquared cs(wiener_diff, NSTEPS, h, 102, 0.1);
 	cs.Execute();
 	cs.WriteToCsv();
+
+	//rng.RandomArray(wiener_diff, NSTEPS);
+	//ChiSquared cs(wiener_diff, NSTEPS, h, 102, 0.1f);
+	//cs.Execute();
+	//cs.WriteToCsv();
 	//MCG59 mcg(__SEED__);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//float h = TIME / (float)NSTEPS; // step

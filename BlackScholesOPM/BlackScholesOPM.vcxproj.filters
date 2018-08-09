@@ -69,6 +69,9 @@
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h">
@@ -123,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

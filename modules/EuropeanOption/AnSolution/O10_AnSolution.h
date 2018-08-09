@@ -7,7 +7,6 @@ class AnSolutionOption : public EuropeanOption {
 public:
 
 	int		num_Threads;
-	int		N; //amount of options 
 	int 	version;
 	double	_time;
 	double	start, finish;

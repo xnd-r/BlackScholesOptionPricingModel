@@ -100,7 +100,7 @@ void ChiSquared::WriteToCsv() {
 		time(&rawtime);
 		std::string date = asctime(localtime(&rawtime));
 		date.pop_back();
-		date.append("_GBM_Analitycal_Simple.csv");
+		date.append("_Chi_Squared_Results.csv");
 
 		for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
 			if (*it == ':') {
@@ -122,7 +122,7 @@ void ChiSquared::WriteToCsv() {
 			for (std::string::iterator it = tmp_cell3.begin(); it<tmp_cell3.end(); ++it)
 				std::replace(tmp_cell3.begin(), tmp_cell3.end(), '.', ',');
 
-			fprintf(f, /*"%lf;\n"*/"%s;%s;%s;", /*buffer[j]*/tmp_cell.c_str(), tmp_cell2.c_str(), tmp_cell3.c_str());
+			fprintf(f, /*"%lf;\n"*/"%s;%s;%s;\n", /*buffer[j]*/tmp_cell.c_str(), tmp_cell2.c_str(), tmp_cell3.c_str());
 		}
 		fprintf(f, "\n");
 		fclose(f);

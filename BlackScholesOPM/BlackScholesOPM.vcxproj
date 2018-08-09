@@ -137,6 +137,7 @@
     <ClInclude Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.h" />
     <ClInclude Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.h" />
     <ClInclude Include="..\modules\EuropeanOption\include\O00_EuropeanOption.h" />
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.h" />
     <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h" />
     <ClInclude Include="..\modules\StockPriece\include\S20_AnSimple.h" />
     <ClInclude Include="..\modules\StockPriece\include\S21_AnExtended.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="..\etc\RowTable\E_RowTable.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\src\O00_EuropeanOption.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S10_Wiener.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S20_AnSimple.cpp" />
