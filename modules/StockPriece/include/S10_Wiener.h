@@ -14,6 +14,7 @@
 
 #define NPATHS		50	// amo of trajectories
 #define NSTEPS		300 
+#define __STEP__	TIME / NSTEPS
 
 class StockPrice : public BlackScholes {
 	

@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <string>
 
-#include "../../modules/StockPriece/include/S10_Wiener.h"
 
 class RVCharacteristics
 {
@@ -29,7 +28,6 @@ public:
 
 public:
 	RVCharacteristics(float* wd, int _len, float _h);
-	// TODO: add gist, output(everything), graph, Chi-squared...  
 
 	float GetMean();
 	float GetVariance();

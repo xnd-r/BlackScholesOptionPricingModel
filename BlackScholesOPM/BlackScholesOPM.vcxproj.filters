@@ -36,21 +36,6 @@
     <ClCompile Include="..\modules\StockPriece\src\S10_Wiener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\etc\MathStat\EM20_ChiSquared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\etc\RNG\ER20_Unifrom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\etc\RNG\ER21_Normal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\etc\RNG\ER10_RNG.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\etc\MathStat\EM10_MathStat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\etc\RowTable\E_RowTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -95,25 +80,10 @@
     <ClInclude Include="..\include\B00_BlackScholes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\etc\MathStat\EM10_MathStat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\etc\MathStat\EM20_ChiSquared.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\etc\RNG\ER20_Uniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\etc\RNG\ER21_Normal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\etc\CLI\A_CLI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\etc\RowTable\E_RowTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\etc\RNG\ER10_RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\modules\EuropeanOption\include\O00_EuropeanOption.h">

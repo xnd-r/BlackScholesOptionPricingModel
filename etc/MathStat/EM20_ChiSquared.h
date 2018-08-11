@@ -22,6 +22,7 @@ public:
 	void	SetQj();
 	void	SetR0();
 	void	WriteToCsv();
+	void	Calculate();
 	void	Execute();
 	char*	IsHypoAccepted();
 

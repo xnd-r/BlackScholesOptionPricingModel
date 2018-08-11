@@ -104,12 +104,17 @@ char* ChiSquared::IsHypoAccepted() {
 	return 1.0f - FDash < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
 }
 
-void ChiSquared::Execute() {
+void ChiSquared::Calculate() {
 	SetIntervals();
 	SetNj();
 	SetQj();
 	SetR0();
 	ChiSquaredDistribute();
+}
+
+void ChiSquared::Execute() {
+	Calculate();
+	WriteToCsv();
 }
 
 void ChiSquared::WriteToCsv() {
