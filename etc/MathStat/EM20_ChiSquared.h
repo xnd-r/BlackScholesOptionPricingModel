@@ -10,12 +10,13 @@ class ChiSquared : public RVCharacteristics {
 	float*	arrZ;
 	int*	arrN;
 	float*	arrQ;
+	float	FDash;
 
 public:
 	ChiSquared(float* wd, int _len, float _h, int _k, float al);
 	float	CDF(float mean, float variance, float x); // cummulative distribution function for normal distribution
-	float	ChiSquaredDencity(int r, float x);
-	float	ChiSquared::ChiSquaredDistribute();
+	float	ChiSquaredDencity(float x);
+	void	ChiSquaredDistribute();
 	void	SetIntervals();
 	void	SetNj();
 	void	SetQj();

@@ -4,56 +4,56 @@
     <Position X="12.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IBQAAAAAgAAAACQAQBAAAAAAAAAAACAAgQAQIAABQgI=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\MathStat\EM20_ChiSquared.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\MathStat\EM20_ChiSquared.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RVCharacteristics">
     <Position X="12.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>UBAAAAAAAAQAAAQAAACAAAIAECAAQIAACAgAAAAWCAg=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\MathStat\EM10_MathStat.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\MathStat\EM10_MathStat.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BlackScholes">
     <Position X="5.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAIAAAAEAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\include\B00_BlackScholes.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\include\B00_BlackScholes.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="EuropeanOption">
     <Position X="8" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\include\O00_EuropeanOption.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\include\O00_EuropeanOption.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="StockPrice">
     <Position X="3.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAEAAAAAAAAQAQAAAAQAAAAAAAAAAAAAAEgAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S10_Wiener.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S10_Wiener.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AnSimple">
     <Position X="3.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S20_AnSimple.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S20_AnSimple.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AnExtended">
     <Position X="3.5" Y="9" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAQAYAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S21_AnExtended.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S21_AnExtended.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NumMethods">
     <Position X="3.5" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S30_NumMethods.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S30_NumMethods.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NumMethodW">
@@ -67,7 +67,7 @@
     </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAYAAAAAAAAEAAAAAAAAgAAAAAAAAAg=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S31_NumMethodsW.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S31_NumMethodsW.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NumMethodWZ">
@@ -81,63 +81,63 @@
     </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAYEAAAAAAAAAAAAAAQAAAEAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S32_NumMethodsWZ.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\StockPriece\include\S32_NumMethodsWZ.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UnifromGen">
     <Position X="16" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER20_Uniform.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER20_Uniform.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NormalGen">
     <Position X="18.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>DAAAAAAgACCAAAAAAAAAAAAAAGcAAAAAgGcAAYAAwAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER21_Normal.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER21_Normal.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CLI" Collapsed="true">
     <Position X="14.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\CLI\A_CLI.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\CLI\A_CLI.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MCG59">
     <Position X="17.25" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgACAAQAAAAAEAAAAAAAAAIAAgAgAAgAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER10_RNG.h</FileName>
+      <HashCode>ABAAAAAgACAAQAAAAAEAAAAAAAAAIAAgAgAAgAAAAAA=</HashCode>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RNG\ER10_RNG.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AnSolutionOption" Collapsed="true">
     <Position X="8" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAACEAAAAgAAAgEAAAAAAAAAEAEACA8AAAChAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O10_AnSolution.h</FileName>
+      <HashCode>AAAAACEAAAAgAAAgEAAAAAAAAAEAEACA8AAACgAAAAA=</HashCode>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O10_AnSolution.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CallOption" Collapsed="true">
     <Position X="7" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O20_CallOption.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O20_CallOption.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CallPutOption" Collapsed="true">
     <Position X="9.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O21_CallPutOption.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\modules\EuropeanOption\AnSolution\O21_CallPutOption.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Struct Name="row_table" Collapsed="true">
+  <Struct Name="row_table">
     <Position X="14.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAAQAAgAAAAEAAAACEAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>C:\Users\alexander\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RowTable\E_RowTable.h</FileName>
+      <FileName>E:\YandexDisk\_learning\Code\BlackScholesOptionPricingModel\etc\RowTable\E_RowTable.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Font Name="Segoe UI" Size="9" />

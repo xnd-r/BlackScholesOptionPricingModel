@@ -1,4 +1,5 @@
 #include "EM20_ChiSquared.h"
+#define M_PIF 3.14159265358979323846f
 
 ChiSquared::ChiSquared(float* wd, int _len, float _h,int _k, float al) 
 	: RVCharacteristics(wd, _len, _h) {
@@ -75,23 +76,32 @@ void ChiSquared::SetR0() {
 	R0 = len * res;
 }
 
-float ChiSquared::ChiSquaredDencity(int r, float x) {
-	return x > 0.0f ? powf(2.0f, -r / 2.0f) * powf(tgammaf(r), -1) : 0.0f;
+float Gamma(int x)
+{
+	if (x == 2)	
+		return 1.0f;
+	else if (x == 1) 
+		return sqrtf(M_PIF);
+	else 
+		return (x / 2.0 - 1.0f) * Gamma(x - 2);
 }
 
-float ChiSquared::ChiSquaredDistribute() // integration of ChiSquaredDencity from 0.0 to R0
+
+float ChiSquared::ChiSquaredDencity(float x) {
+	return x > 0.0f ? powf(2.0f, -(k - 1) / 2.0f) * powf(tgammaf((k - 1) / 2.0f), -1) * powf(x, (float)(k - 1) / 2.0f - 1.0f) * expf(-x / 2.0f) : 0.0f;
+}
+
+void ChiSquared::ChiSquaredDistribute() // integration of ChiSquaredDencity from 0.0 to R0
 {
-	float res = 0.0f;
+	double res = 0.0;
 	int n = 1000; // amount of sections in integral calculating
 	for (int i = 1; i <= n; ++i)
-	{
-		res += (ChiSquaredDencity(k - 1, R0 * (i - 1) / n) + ChiSquaredDencity(k - 1, R0 * i / n)) * (R0 / (2.0f * (float)n));
-	}
-	return res;
+		res += (ChiSquaredDencity(R0 * (i - 1) / (double)n) + ChiSquaredDencity(R0 * i / (double)n)) * (R0 / (2.0f * (double)n));
+	FDash = res;
 }
 
 char* ChiSquared::IsHypoAccepted() {
-	return 1.0f - ChiSquaredDistribute() < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
+	return 1.0f - FDash < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
 }
 
 void ChiSquared::Execute() {
@@ -137,7 +147,7 @@ void ChiSquared::WriteToCsv() {
 		}
 		fprintf(f, "%i;%s%lf%s;%i\n\n", k - 1, "[", arrZ[k - 2], ", +inf]", arrN[k - 1]);
 		fprintf(f, "%s%lf;\n", "R0: ",R0);
-		fprintf(f, "%s%lf;\n", "Integrated Chi Squared Dencity from 0.0 to R0: ", ChiSquaredDistribute());
+		fprintf(f, "%s%lf;\n", "Integrated Chi Squared Dencity from 0.0 to R0: ", FDash);
 		fprintf(f, "%s%lf;\n", "Significance level: ", alpha);
 		fprintf(f, "%s\n", IsHypoAccepted());
 
