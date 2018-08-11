@@ -20,7 +20,7 @@ int main() {
 	rng.RandomArray(wiener_diff, NSTEPS);
 	//rng.WriteToCsv(wiener_diff, NSTEPS);
 	//RVCharacteristics rvc(wiener_diff, NSTEPS, h);
-	ChiSquared cs(wiener_diff, NSTEPS, h, 102, 0.1);
+	ChiSquared cs(wiener_diff, NSTEPS, h, 102, 0.1f);
 	cs.Execute();
 	cs.WriteToCsv();
 

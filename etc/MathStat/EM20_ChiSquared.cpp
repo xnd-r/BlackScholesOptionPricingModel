@@ -7,11 +7,18 @@ ChiSquared::ChiSquared(float* wd, int _len, float _h,int _k, float al)
 }
 
 void ChiSquared::SetIntervals() {
+	arrZ = new float[k - 1];
+	arrZ[k - 2] = wd_sorted[len - 1];
+
 	if (k >= 15) {
-		arrZ = new float[k - 1];
-		arrZ[k - 2] = wd_sorted[len - 1];
-		double d = (arrZ[k - 2] - wd_sorted[5]) / (k - 2);
+		float d = (arrZ[k - 2] - wd_sorted[5]) / (k - 2);
 		arrZ[0] = wd_sorted[5];
+		for (int i = 1; i < k - 2; i++)
+			arrZ[i] = arrZ[0] + d * i;
+	}
+	else {
+		float d = (arrZ[k - 2] - wd_sorted[1]) / (k - 2);
+		arrZ[0] = wd_sorted[1];
 		for (int i = 1; i < k - 2; i++)
 			arrZ[i] = arrZ[0] + d * i;
 	}
@@ -19,7 +26,7 @@ void ChiSquared::SetIntervals() {
 
 void ChiSquared::SetNj() {
 	int counter = 0;
-	arrN = new float[k - 1];
+	arrN = new int[k - 1];
 	for (int i = 0; i < len; ++i)
 	{
 		if (wd_sorted[i] <= arrZ[0])
@@ -46,7 +53,7 @@ void ChiSquared::SetNj() {
 	arrN[k - 1] = counter;
 }
 float ChiSquared::CDF(float mean, float variance, float x) {
-	return 0.5f * (1.0f + erff(-((x - mean) * (x - mean)) / (2.0f * variance)));
+	return 0.5f * (1.0f + erff((x - mean) / sqrtf(2.0f * variance)));
 }
 
 void ChiSquared::SetQj()
@@ -72,19 +79,19 @@ float ChiSquared::ChiSquaredDencity(int r, float x) {
 	return x > 0.0f ? powf(2.0f, -r / 2.0f) * powf(tgammaf(r), -1) : 0.0f;
 }
 
-float ChiSquared::ChiSquaredDistribute(int r) // integration of ChiSquaredDencity from 0.0 to R0
+float ChiSquared::ChiSquaredDistribute() // integration of ChiSquaredDencity from 0.0 to R0
 {
-	double res = 0.0;
+	float res = 0.0f;
 	int n = 1000; // amount of sections in integral calculating
-	for (int k = 1; k <= n; ++k)
+	for (int i = 1; i <= n; ++i)
 	{
-		res += (ChiSquaredDencity(R0 * (k - 1) / n, R) + ChiSquaredDencity(R0 * k / n, R)) * (R0 / (2.0f * n));
+		res += (ChiSquaredDencity(k - 1, R0 * (i - 1) / n) + ChiSquaredDencity(k - 1, R0 * i / n)) * (R0 / (2.0f * (float)n));
 	}
 	return res;
 }
 
 char* ChiSquared::IsHypoAccepted() {
-	return 1.0f - ChiSquaredDistribute(k - 1) < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
+	return 1.0f - ChiSquaredDistribute() < alpha ? "Hypothsesis accepted" : "Hypothsesis rejected";
 }
 
 void ChiSquared::Execute() {
@@ -92,7 +99,7 @@ void ChiSquared::Execute() {
 	SetNj();
 	SetQj();
 	SetR0();
-	ChiSquaredDistribute(k - 1);
+	ChiSquaredDistribute();
 }
 
 void ChiSquared::WriteToCsv() {
@@ -110,20 +117,29 @@ void ChiSquared::WriteToCsv() {
 		}
 
 		FILE *f = fopen(date.c_str(), "w");
-		for (int j = 0; j < k; j++) {
-			std::string tmp_cell = std::to_string(arrZ[j]);
+		fprintf(f, "%s\n", "index(j);Z[j];N[j];Q[j]");
+		fprintf(f, "%s%lf%s;%i\n", "0;[-inf, ", arrZ[0], "]", arrN[0]);
+		for (int j = 1; j < k - 1; j++) {
+			std::string tmp_cell0 = std::to_string(arrZ[j - 1]);
+			std::string tmp_cell1 = std::to_string(arrZ[j]);
 			std::string tmp_cell2 = std::to_string(arrN[j]);
  			std::string tmp_cell3 = std::to_string(arrQ[j]);
-
-			for (std::string::iterator it = tmp_cell.begin(); it<tmp_cell.end(); ++it)
-				std::replace(tmp_cell.begin(), tmp_cell.end(), '.', ',');
+			for (std::string::iterator it = tmp_cell0.begin(); it<tmp_cell0.end(); ++it)
+				std::replace(tmp_cell0.begin(), tmp_cell0.end(), '.', ',');
+			for (std::string::iterator it = tmp_cell1.begin(); it<tmp_cell1.end(); ++it)
+				std::replace(tmp_cell1.begin(), tmp_cell1.end(), '.', ',');
 			for (std::string::iterator it = tmp_cell2.begin(); it<tmp_cell2.end(); ++it)
 				std::replace(tmp_cell2.begin(), tmp_cell2.end(), '.', ',');
 			for (std::string::iterator it = tmp_cell3.begin(); it<tmp_cell3.end(); ++it)
 				std::replace(tmp_cell3.begin(), tmp_cell3.end(), '.', ',');
 
-			fprintf(f, /*"%lf;\n"*/"%s;%s;%s;\n", /*buffer[j]*/tmp_cell.c_str(), tmp_cell2.c_str(), tmp_cell3.c_str());
+			fprintf(f, "%i;%s%s%s%s%s;%s;%s;\n", j, "[", tmp_cell0.c_str(), ", ", tmp_cell1.c_str(), "]", tmp_cell2.c_str(), tmp_cell3.c_str());
 		}
-		fprintf(f, "\n");
+		fprintf(f, "%i;%s%lf%s;%i\n\n", k - 1, "[", arrZ[k - 2], ", +inf]", arrN[k - 1]);
+		fprintf(f, "%s%lf;\n", "R0: ",R0);
+		fprintf(f, "%s%lf;\n", "Integrated Chi Squared Dencity from 0.0 to R0: ", ChiSquaredDistribute());
+		fprintf(f, "%s%lf;\n", "Significance level: ", alpha);
+		fprintf(f, "%s\n", IsHypoAccepted());
+
 		fclose(f);
 }
