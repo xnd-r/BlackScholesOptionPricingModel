@@ -9,7 +9,7 @@
 int main() { 
 
 	float *wiener_diff = new float[NSTEPS]; // Random values buffer
-	float h = TIME / (float)NSTEPS; // step
+	float h = TIME / NSTEPS; // step
 	NormalGen rng(0, h, __SEED__);
 	rng.RandomArray(wiener_diff, NSTEPS);
 	//rng.WriteToCsv(wiener_diff, NSTEPS);

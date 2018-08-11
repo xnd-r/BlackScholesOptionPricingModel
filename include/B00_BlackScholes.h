@@ -18,6 +18,7 @@
 #define S0			100.0f	// option price at t == 0
 
 #define __SEED__	20000000ll
+#define __STEP__	TIME / NSTEPS
 
 
 class BlackScholes {

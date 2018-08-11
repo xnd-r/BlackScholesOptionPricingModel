@@ -34,7 +34,7 @@ __declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamS
 			S_Num[j] = S0;
 			int numMethodSteps = nSteps / scale;
 			float h = Time / (float)numMethodSteps;
-			float t = 0;
+			float t = 0.0f;
 			int index = 0;
 			for (int k = 0; k < numMethodSteps; k++) {
 				t = t + h;
