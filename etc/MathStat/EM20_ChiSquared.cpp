@@ -83,7 +83,7 @@ float Gamma(int x)
 	else if (x == 1) 
 		return sqrtf(M_PIF);
 	else 
-		return (x / 2.0 - 1.0f) * Gamma(x - 2);
+		return (x / 2.0f - 1.0f) * Gamma(x - 2);
 }
 
 
@@ -93,10 +93,10 @@ float ChiSquared::ChiSquaredDencity(float x) {
 
 void ChiSquared::ChiSquaredDistribute() // integration of ChiSquaredDencity from 0.0 to R0
 {
-	double res = 0.0;
+	float res = 0.0;
 	int n = 1000; // amount of sections in integral calculating
 	for (int i = 1; i <= n; ++i)
-		res += (ChiSquaredDencity(R0 * (i - 1) / (double)n) + ChiSquaredDencity(R0 * i / (double)n)) * (R0 / (2.0f * (double)n));
+		res += (ChiSquaredDencity(R0 * (i - 1) / (float)n) + ChiSquaredDencity(R0 * i / (float)n)) * (R0 / (2.0f * (float)n));
 	FDash = res;
 }
 

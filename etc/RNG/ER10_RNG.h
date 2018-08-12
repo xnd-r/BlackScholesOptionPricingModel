@@ -1,6 +1,10 @@
 #ifndef ____RANDOM_NUMBER_GENERATOR____
 #define ____RANDOM_NUMBER_GENERATOR____
 
+#if defined(_WIN64) || defined(_WIN32) 
+#define _CRT_SECURE_NO_WARNINGS // using unsafe functions
+#endif
+
 #include <cmath>
 #include <time.h>
 #include <string>

@@ -83,9 +83,10 @@ void CallPutOption::_V3(float* restrict pT, float* restrict pK, float* restrict 
 
 void CallPutOption::_V4(float *pT, float *pK, float *pS0, float *pC, float *pP)
 {
-
+#if defined (__INTEL_COMPILER)
 #pragma simd
 #pragma vector always	
+#endif
 	for (int i = 0; i < N; i++)
 	{
 		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
@@ -104,9 +105,10 @@ void CallPutOption::_V4(float *pT, float *pK, float *pS0, float *pC, float *pP)
 
 void CallPutOption::_V5(float* pT, float* pK, float* pS0, float* pC, float *pP)
 {
-
+#if defined (__INTEL_COMPILER)
 #pragma simd
 #pragma vector always
+#endif
 	for (int i = 0; i < N; i++)
 	{
 		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
@@ -126,7 +128,9 @@ void CallPutOption::_V5(float* pT, float* pK, float* pS0, float* pC, float *pP)
 void CallPutOption::_V6(float* pT, float* pK, float* pS0, float* pC, float *pP)
 {
 
+#if defined (__INTEL_COMPILER)
 #pragma simd
+#endif
 	for (int i = 0; i < N; i++)
 	{
 		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) * pT[i]) / (SIG * sqrtf(pT[i]));
@@ -145,7 +149,9 @@ void CallPutOption::_V6(float* pT, float* pK, float* pS0, float* pC, float *pP)
 void CallPutOption::_V7(float *pT, float *pK, float *pS0, float *pC, float *pP)
 {
 
+#if defined (__INTEL_COMPILER)
 #pragma simd
+#endif
 #pragma omp parallel for private(invf, d1, d2, erf1, erf2)
 	for (int i = 0; i < N; i++)
 	{
@@ -167,8 +173,11 @@ void CallPutOption::_V7(float *pT, float *pK, float *pS0, float *pC, float *pP)
 void CallPutOption::_V8(float *pT, float *pK, float *pS0, float *pC, float *pP)
 {
 
-#pragma simd 
+#if defined (__INTEL_COMPILER)
+#pragma simd
 #pragma vector nontemporal
+#endif
+
 #pragma omp parallel for private(d1, d2, erf1, erf2)
 	for (int i = 0; i < N; i++)
 	{

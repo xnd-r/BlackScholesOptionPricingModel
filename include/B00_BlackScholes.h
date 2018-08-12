@@ -7,6 +7,7 @@
 #include <math.h>
 
 #if defined(_WIN64) || defined(_WIN32) 
+	#define _CRT_SECURE_NO_WARNINGS // using unsafe functions
 	#pragma warning(disable : 4005) // fopen warning disable
 	#pragma warning(disable : 4996) // REDEFINITION WARNING DISABLED!
 #endif
@@ -18,7 +19,7 @@
 #define S0			100.0f	// option price at t == 0
 
 #define __SEED__	20000000ll
-#define __STEP__	TIME / NSTEPS
+//#define __STEP__	TIME / NSTEPS
 
 
 class BlackScholes {
@@ -27,7 +28,7 @@ public:
 	BlackScholes() {};
 	~BlackScholes() {};
 	float GetStockPrice(float wiener_diff, float time);
-	virtual void Execute() = 0;
+	virtual void Execute() {};
 	//virtual void TGetOptionPrice();
 };
 

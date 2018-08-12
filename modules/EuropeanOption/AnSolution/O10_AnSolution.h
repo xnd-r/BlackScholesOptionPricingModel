@@ -1,7 +1,7 @@
 #ifndef ____ANALITYCAL_SOLUTION_OPTION____
 #define ____ANALITYCAL_SOLUTION_OPTION____
 #include "../include/O00_EuropeanOption.h"
-
+#include <omp.h>
 
 class AnSolutionOption : public EuropeanOption {
 public:
@@ -16,6 +16,11 @@ public:
 	float	invf;
 	float	p1, p2;
 
+	double* times;
+	double* OptionValue;
+
+	//virtual void Execute();
+
 	// TODO: try to make abstract
 	//TGetOptionPrice option_array[9];
 	virtual void _V0() {};
@@ -27,5 +32,6 @@ public:
 	virtual void _V6() {};
 	virtual void _V7() {};
 	virtual void _V8() {};
+	//void WriteToCsv();	
 };
 #endif // !____ANALITYCAL_SOLUTION_OPTION____

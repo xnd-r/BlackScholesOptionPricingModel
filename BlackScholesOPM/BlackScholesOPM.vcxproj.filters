@@ -57,6 +57,9 @@
     <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h">

@@ -3,6 +3,10 @@
 
 #define _EPSILON_	5E-03f // calculations accuracy
 
+#if defined(_WIN64) || defined(_WIN32) 
+#define _CRT_SECURE_NO_WARNINGS // using unsafe functions
+#endif
+
 #include <vector>
 #include <time.h>
 #include <fstream>

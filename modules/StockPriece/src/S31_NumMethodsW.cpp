@@ -17,11 +17,6 @@ __declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamS
 {
 	float *w_traject = new float[nSteps + 1];
 
-	#if defined(__INTEL_COMPILER) 
-		#pragma simd
-		#pragma vector always	
-	#endif
-
 	for (int i = 0; i < nPaths; i++) {
 		SimulateWienerProcess(stream, nSteps, Time, w_traject);
 
@@ -34,7 +29,7 @@ __declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamS
 			S_Num[j] = S0;
 			int numMethodSteps = nSteps / scale;
 			float h = Time / (float)numMethodSteps;
-			float t = 0.0f;
+			float t = 0;
 			int index = 0;
 			for (int k = 0; k < numMethodSteps; k++) {
 				t = t + h;
@@ -45,7 +40,7 @@ __declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamS
 			Error[j] = Error[j] + fabs(S_An - S_Num[j]);
 			scale = scale / 2;
 		}
-	}
+}
 
 	for (int j = 0; j < 8; j++)
 		Error[j] = Error[j] / nPaths;

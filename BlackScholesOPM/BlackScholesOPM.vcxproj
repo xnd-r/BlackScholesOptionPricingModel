@@ -148,6 +148,7 @@
     </ClCompile>
     <ClCompile Include="..\etc\CLI\A_CLI.cpp" />
     <ClCompile Include="..\etc\RowTable\E_RowTable.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp" />

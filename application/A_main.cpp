@@ -3,10 +3,14 @@
 #include "../modules/StockPriece/include/S32_NumMethodsWZ.h"	
 #include "../etc/MathStat/EM20_ChiSquared.h"
 #include "../etc/RNG/ER21_Normal.h"
+#include "../modules/EuropeanOption/AnSolution/O20_CallOption.h"
 
 #include <iostream>
 
 int main() { 
+
+	CallOption co;
+	co.WriteToCsv(4);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//NormalGen rng(0, __STEP__, __SEED__);
 	//rng.RandomArray(wiener_diff, NSTEPS);
@@ -53,9 +57,9 @@ int main() {
 	//ae.Execute();
 	//std::cout << "AnExtended Success" << std::endl;
 
-	NumMethodW nmw;
-	nmw.Execute(nmw.step_array[0], "_Euler_Marayama.csv");
-	std::cout << "Euler Method Success" << std::endl;
+	//NumMethodW nmw;
+	//nmw.Execute(nmw.step_array[0], "_Euler_Marayama.csv");
+	//std::cout << "Euler Method Success" << std::endl;
 	//nmw.Execute(nmw.step_array[1], "_Milstein.csv");
 	//std::cout << "Milstein Method Success" << std::endl;
 	//nmw.Execute(nmw.step_array[2], "_RK1.csv");
