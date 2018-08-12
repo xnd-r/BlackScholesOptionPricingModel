@@ -91,9 +91,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../etc/MathStat;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>MathStat.lib;RNG.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Debug;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -126,14 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\etc\CLI\A_CLI.h" />
-    <ClInclude Include="..\etc\MathStat\EM20_ChiSquared.h" />
-    <ClInclude Include="..\etc\MathStat\EM10_MathStat.h" />
-    <ClInclude Include="..\etc\RNG\ER10_RNG.h" />
-    <ClInclude Include="..\etc\RNG\ER20_Uniform.h" />
-    <ClInclude Include="..\etc\RNG\ER21_Normal.h" />
     <ClInclude Include="..\etc\RowTable\E_RowTable.h" />
     <ClInclude Include="..\include\B00_BlackScholes.h" />
-    <ClInclude Include="..\modules\EuropeanOption\include\O10_EuropeanOption.h" />
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.h" />
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.h" />
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.h" />
+    <ClInclude Include="..\modules\EuropeanOption\include\O00_EuropeanOption.h" />
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.h" />
     <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h" />
     <ClInclude Include="..\modules\StockPriece\include\S20_AnSimple.h" />
     <ClInclude Include="..\modules\StockPriece\include\S21_AnExtended.h" />
@@ -146,13 +147,12 @@
       <FileType>CppCode</FileType>
     </ClCompile>
     <ClCompile Include="..\etc\CLI\A_CLI.cpp" />
-    <ClCompile Include="..\etc\MathStat\EM20_ChiSquared.cpp" />
-    <ClCompile Include="..\etc\MathStat\EM10_MathStat.cpp" />
-    <ClCompile Include="..\etc\RNG\ER10_RNG.cpp" />
-    <ClCompile Include="..\etc\RNG\ER20_Unifrom.cpp" />
-    <ClCompile Include="..\etc\RNG\ER21_Normal.cpp" />
     <ClCompile Include="..\etc\RowTable\E_RowTable.cpp" />
-    <ClCompile Include="..\modules\EuropeanOption\src\O10_EuropeanOption.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\src\O00_EuropeanOption.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S10_Wiener.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S20_AnSimple.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S21_AnExtended.cpp" />
@@ -163,6 +163,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\etc\MathStat\MathStat.vcxproj">
+      <Project>{c6996aa9-9bab-4a9d-bc91-b88122ae4bae}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\etc\RNG\RNG.vcxproj">
+      <Project>{fa1101c5-6b83-4323-b290-13030f9135d1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

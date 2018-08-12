@@ -18,7 +18,7 @@ void NumMethods::WriteToCsv(float* Errors, int nSteps, int nRows, float Time, in
 	
 
 	FILE *f = fopen(date.c_str(), "w");
-	fprintf(f, "h;e;log(h);log(e);\n");
+	fprintf(f, "step;e;log(step);log(e);\n");
 	for (int i = 0; i < nRows; ++i) {
 		rt.SetValues(Errors[i], nSteps, (int)(scale / pow(2,i)), nRows, Time);
 		std::string tmp_string = rt.CreateString();

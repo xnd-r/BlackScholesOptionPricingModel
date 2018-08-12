@@ -3,13 +3,16 @@
 
 #define _EPSILON_	5E-03f // calculations accuracy
 
+#if defined(_WIN64) || defined(_WIN32) 
+#define _CRT_SECURE_NO_WARNINGS // using unsafe functions
+#endif
+
 #include <vector>
 #include <time.h>
 #include <fstream>
 #include <algorithm>
 #include <string>
 
-#include "../../modules/StockPriece/include/S10_Wiener.h"
 
 class RVCharacteristics
 {
@@ -29,7 +32,6 @@ public:
 
 public:
 	RVCharacteristics(float* wd, int _len, float _h);
-	// TODO: add gist, output(everything), graph, Chi-squared...  
 
 	float GetMean();
 	float GetVariance();

@@ -3,11 +3,10 @@
 __declspec(noinline) void AnExtended::SimulateWienerProcess(VSLStreamStatePtr stream, int nSteps, float Time, float *buffer) {
 
 	float *wiener_diff = new float[nSteps]; // Random values buffer
-
 	float h = Time / (float)nSteps; // step
-
-	GenerateGauss(0, sqrt(h), nSteps, stream, wiener_diff); buffer[0] = 0;
-	// getting nSteps random values with N(0, h)
+	GenerateGauss(0, sqrt(h), nSteps, stream, wiener_diff); 
+	buffer[0] = 0.0f;
+	// getting nSteps random values with N(0, __STEP__)
 	for (int j = 1; j <= nSteps; j++) {
 		buffer[j] = buffer[j - 1] + wiener_diff[j - 1];
 	}
@@ -18,7 +17,6 @@ __declspec(noinline) void AnExtended::SimulateWienerProcess(VSLStreamStatePtr st
 __declspec(noinline) void AnExtended::SimulateStockPrices(VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float **sBuffer) {
 	// simulating stock priese according to an intermediate values of segment 
 	float *wiener_diff = new float[nSteps + 1];
-
 	float h = Time / (float)nSteps; // step
 	for (int i = 0; i < nPaths; i++) {
 		// Wiener process trajectory simulating

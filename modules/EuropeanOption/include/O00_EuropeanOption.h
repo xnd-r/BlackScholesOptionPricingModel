@@ -3,17 +3,21 @@
 #ifndef ____EUROPEAN_OPTION____
 #define ____EUROPEAN_OPTION____
 
-#include <math.h>
 #include <time.h>
 #include <fstream>
 #include <algorithm>
 #include <string>
-#include "mkl.h"
 
 #include "../../../include/B00_BlackScholes.h"
 
+#define			K	 100.0f // strike price -- price fixed in option
+#define	 INVSQRT2	 0.707106781f
+#define			N	100000 //amount of options 
+
 class EuropeanOption : public BlackScholes {
 public:
+
+
 
 };
 

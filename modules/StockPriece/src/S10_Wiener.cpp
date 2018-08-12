@@ -32,8 +32,8 @@ __declspec(noinline) void StockPrice::SimulateWienerProcess(int nPaths, int nSte
 
 	for (int i = 0; i < nPaths; i++) {
 		// getting nSteps random values with N(0, h)
-		GenerateGauss(0, sqrt(h), nSteps, stream, wiener_diff);
-		// TODO: Add N(0, h) correcthness
+		GenerateGauss(0, sqrtf(h), nSteps, stream, wiener_diff);
+		// TODO: Add N(0, __STEP__) correcthness
 		buffer[i][0] = 0;
 		for (int j = 1; j <= nSteps; j++) {
 			buffer[i][j] = buffer[i][j - 1] + wiener_diff[j - 1];
