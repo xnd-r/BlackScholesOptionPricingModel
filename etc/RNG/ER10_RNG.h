@@ -17,8 +17,9 @@ public:
 	long long int seed;
 
 	MCG59() {};
-	MCG59(long long int seed);
+	MCG59(long int seed);
 	~MCG59() {};
+	long long int GetLongSeed(long int seed);
 	virtual void RandomArray(float* dest_arr, int len);
 	virtual float GetFloat();
 	virtual float GetFloatFromRange(float min_float, float max_float); // returns random value from [min_float, max_float]

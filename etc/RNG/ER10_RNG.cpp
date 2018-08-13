@@ -1,8 +1,13 @@
 #include "ER10_RNG.h"
 
-MCG59::MCG59(long long int seed) : a(302875106592253), seed(seed) {
+MCG59::MCG59(long int seed) : a(302875106592253), seed(GetLongSeed(seed)) {
 	seed % 2 == 0 ? m = 576460752303423488 : m = 144115188075855872;
 };
+
+// need test
+long long int MCG59::GetLongSeed(long int seed) {
+	return (long long int) seed << 32 | seed;
+}
 
 void MCG59::RandomArray(float* _array, int len) {
 	for (int i = 0; i < len; ++i) {

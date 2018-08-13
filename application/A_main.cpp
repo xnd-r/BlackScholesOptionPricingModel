@@ -4,6 +4,7 @@
 #include "../etc/MathStat/EM20_ChiSquared.h"
 #include "../etc/RNG/ER21_Normal.h"
 #include "../modules/EuropeanOption/AnSolution/O20_CallOption.h"
+#include "../modules/EuropeanOption/AnSolution/O21_CallPutOption.h"
 
 #include <iostream>
 
@@ -11,6 +12,8 @@ int main() {
 
 	CallOption co;
 	co.WriteToCsv(4);
+	CallPutOption cpo;
+	cpo.WriteToCsv(4);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//NormalGen rng(0, __STEP__, __SEED__);
 	//rng.RandomArray(wiener_diff, NSTEPS);
