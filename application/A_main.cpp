@@ -10,10 +10,10 @@
 
 int main() { 
 
-	CallOption co;
-	co.WriteToCsv(4);
-	CallPutOption cpo;
-	cpo.WriteToCsv(4);
+	//CallOption co;
+	//co.WriteToCsv(4);
+	//CallPutOption cpo;
+	//cpo.WriteToCsv(4);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//NormalGen rng(0, __STEP__, __SEED__);
 	//rng.RandomArray(wiener_diff, NSTEPS);
@@ -30,19 +30,22 @@ int main() {
 	////	std::cout << wiener_diff[i] << std::endl;
 	//delete[] wiener_diff;
 
-	//NormalGen rng(0, h, __SEED__);
-	//float *wiener_diff1 = new float[NSTEPS]; // Random values buffer
-	//float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
-	//rng.RandomArray(wiener_diff1, NSTEPS);
+	float h = TIME / NSTEPS;
 
-	//RVCharacteristics rvc1(wiener_diff1, NSTEPS, h);
-	//rvc1.WriteToCsv(_EPSILON_);
+	NormalGen rng(0, h, __SEED__);
+	float *wiener_diff1 = new float[NSTEPS]; // Random values buffer
+	rng.RandomArray(wiener_diff1, NSTEPS);
 
-	//StockPrice sp;
-	//VSLStreamStatePtr stream = sp.InitGen();
-	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff2);
-	//RVCharacteristics rvc2(wiener_diff2, NSTEPS, h);
-	//rvc.WriteToCsv(_EPSILON_);
+	RVCharacteristics rvc1(wiener_diff1, NSTEPS, h);
+	rvc1.WriteToCsv(_EPSILON_);
+
+	_sleep(3000);
+	StockPrice sp;
+	VSLStreamStatePtr stream = sp.InitGen();
+	float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
+	sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff2);
+	RVCharacteristics rvc2(wiener_diff2, NSTEPS, h);
+	rvc2.WriteToCsv(_EPSILON_);
 
 	//for (int i = 0; i < NSTEPS; ++i)
 	//	std::cout << wiener_diff[i] << "\t" << wiener_diff1[i] << "\t" << wiener_diff2[i] << std::endl;

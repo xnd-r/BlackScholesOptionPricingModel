@@ -139,6 +139,9 @@
     <ClInclude Include="ER20_Uniform.h" />
     <ClInclude Include="ER21_Normal.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="RNGDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

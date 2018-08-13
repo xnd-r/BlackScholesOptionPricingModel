@@ -11,13 +11,17 @@ long long int MCG59::GetLongSeed(long int seed) {
 
 void MCG59::RandomArray(float* _array, int len) {
 	for (int i = 0; i < len; ++i) {
-		seed = abs((a * seed) % m);
+		seed = (a * seed) % m;
+		if (seed < 0)
+			seed += m;
 		_array[i] = (float)seed / m;
 	}
 }
 
 float MCG59::GetFloat() {
-	seed = abs((a * seed) % m);
+	seed = (a * seed) % m;
+	if (seed < 0)
+		seed += m;
 	return (float)seed / m;
 }
 

@@ -137,6 +137,9 @@
     <ClInclude Include="EM10_MathStat.h" />
     <ClInclude Include="EM20_ChiSquared.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="MathStatDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
