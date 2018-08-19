@@ -6,7 +6,7 @@ MCG59::MCG59(long int seed) : a(302875106592253), seed(GetLongSeed(seed)) {
 
 // need test
 long long int MCG59::GetLongSeed(long int seed) {
-	return (long long int) seed << 32 | seed;
+	return (uint64_t) seed << 32 | seed;
 }
 
 void MCG59::RandomArray(float* _array, int len) {
