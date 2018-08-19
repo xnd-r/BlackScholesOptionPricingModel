@@ -1,4 +1,4 @@
-![Alt text](etc/images/BSOPM.png "Black-Scholes option pricing model")
+![Alt text](etc/images/BSOPM.PNG "Black-Scholes option pricing model")
 ## A scientific work.
 
 Usage of stochastic differential equations to solve applied problems of financial mathematics. Study of optimization methods of algorithms and their use in HPC. Generation of pseudorandom numerical sequences for Wiener process simulation. Automation of the collection of results, etc.
