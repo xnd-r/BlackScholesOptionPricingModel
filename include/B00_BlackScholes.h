@@ -18,7 +18,7 @@
 #define R			0.05f	// the interest rate; percent per year 0.05 -> 5%		
 #define S0			100.0f	// option price at t == 0
 
-#define __SEED__	20000000ll
+#define __SEED__	20000000l
 //#define __STEP__	TIME / NSTEPS
 
 

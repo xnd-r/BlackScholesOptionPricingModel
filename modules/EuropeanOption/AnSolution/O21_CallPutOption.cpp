@@ -193,3 +193,77 @@ void CallPutOption::_V8(float *pT, float *pK, float *pS0, float *pC, float *pP)
 		pP[i] = pC[i] - pS0[i] + pK[i] * expf((-1.0f) * R * pT[i]);
 	}
 }
+
+void CallPutOption::WriteToCsv(int threads) {
+	int VersionCount;
+#if defined (__INTEL_COMPILER)
+	VersionCount = 9;
+#else 
+	VersionCount = 8;
+#endif
+	//times = new double[VersionCount];
+	//OptionValue = new double[VersionCount];
+
+	num_Threads = threads;
+	omp_set_num_threads(num_Threads);
+
+	float* pT = new float[5 * N];
+	float* pK = pT + N;
+	float* pS0 = pT + 2 * N;
+	float* pC = pT + 3 * N;
+	float* pP = pT + 4 * N;
+
+#if defined(__INTEL_COMPILER) 
+#pragma simd
+#pragma vector always	
+#endif
+	for (int i = 0; i < N; i++) {
+		pT[i] = TIME;
+		pS0[i] = S0;
+		pK[i] = K;
+	}
+
+	time_t rawtime;
+	time(&rawtime);
+	std::string date = asctime(localtime(&rawtime));
+	date.pop_back();
+	date.append("_Call_And_Put_Option_Price.csv");
+
+	for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
+		if (*it == ':') {
+			date.erase(it);
+		}
+		std::replace(date.begin(), date.end(), ' ', '_');
+	}
+
+	FILE *f = fopen(date.c_str(), "w");
+	fprintf(f, "%s;%s;%s;%s;%s;%s;\n", "S0", "TIME", "K", "R", "SIG", "N");
+	fprintf(f, "%lf;%lf;%lf;%lf;%lf;%i\n\n", S0, TIME, K, R, SIG, N);
+	fprintf(f, "%s;%s;%s%s;\n", "Index", "Call Option Value", "Put Option Value", "Time (sec)");
+	for (int i = 0; i < VersionCount - 1; i++) {
+		start = clock();
+		(this->*version_array[i])(pT, pK, pS0, pC, pP);
+		finish = clock();
+
+		fprintf(f, "%i;%lf;%lf;%lf\n", i, pC[0], pP[0], (double)(finish - start) / CLOCKS_PER_SEC);
+	}
+	start = finish = 0.0;
+	int sum = 0;
+	int a[1024] = { 0 };
+#pragma omp parallel for shared(a) reduction (+: sum) 
+	{
+# pragma omp for
+		for (int i = 0; i < 4096; ++i)
+			sum += a[i];
+	}
+	(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC, pP);
+	(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC, pP);
+	start = clock();
+	(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC, pP);
+	finish = clock();
+	fprintf(f, "%i;%lf;%lf;%lf\n", VersionCount - 1, pC[0], pP[0], (double)(finish - start) / CLOCKS_PER_SEC);
+
+	fprintf(f, "\n");
+
+	fclose(f);
+}

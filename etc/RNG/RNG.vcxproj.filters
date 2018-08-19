@@ -21,10 +21,10 @@
     <ClCompile Include="ER10_RNG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ER20_Unifrom.cpp">
+    <ClCompile Include="ER21_Normal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ER21_Normal.cpp">
+    <ClCompile Include="ER20_Fibonacci.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,11 +32,14 @@
     <ClInclude Include="ER10_RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ER20_Uniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ER21_Normal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ER20_Fibonacci.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RNGDiagram.cd" />
   </ItemGroup>
 </Project>

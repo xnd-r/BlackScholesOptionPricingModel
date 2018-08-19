@@ -5,6 +5,10 @@
 #define _CRT_SECURE_NO_WARNINGS // using unsafe functions
 #endif
 
+#define INDEX_GEN 1
+// 0 -- MCG59; 1 -- SOBOL
+// TODO: to link text names of generators and their indexes
+
 #include <cmath>
 #include <time.h>
 #include <string>
@@ -17,8 +21,9 @@ public:
 	long long int seed;
 
 	MCG59() {};
-	MCG59(long long int seed);
+	MCG59(long int seed);
 	~MCG59() {};
+	long long int GetLongSeed(long int seed);
 	virtual void RandomArray(float* dest_arr, int len);
 	virtual float GetFloat();
 	virtual float GetFloatFromRange(float min_float, float max_float); // returns random value from [min_float, max_float]

@@ -4,13 +4,20 @@
 #include "../etc/MathStat/EM20_ChiSquared.h"
 #include "../etc/RNG/ER21_Normal.h"
 #include "../modules/EuropeanOption/AnSolution/O20_CallOption.h"
+#include "../modules/EuropeanOption/AnSolution/O21_CallPutOption.h"
+#include "../modules/EuropeanOption/NumSolution/O11_NumSolution.h"
 
 #include <iostream>
 
 int main() { 
-
-	CallOption co;
-	co.WriteToCsv(4);
+	
+	NumSolutionOption nso;
+	std::cout << nso.GetMCPrice(1) << nso.t;
+	//_sleep(500);
+	//CallOption co;
+	//co.WriteToCsv(4);
+	//CallPutOption cpo;
+	//cpo.WriteToCsv(4);
 	//float *wiener_diff = new float[NSTEPS]; // Random values buffer
 	//NormalGen rng(0, __STEP__, __SEED__);
 	//rng.RandomArray(wiener_diff, NSTEPS);
@@ -27,19 +34,22 @@ int main() {
 	////	std::cout << wiener_diff[i] << std::endl;
 	//delete[] wiener_diff;
 
+	//float h = TIME / NSTEPS;
+
 	//NormalGen rng(0, h, __SEED__);
 	//float *wiener_diff1 = new float[NSTEPS]; // Random values buffer
-	//float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
 	//rng.RandomArray(wiener_diff1, NSTEPS);
 
 	//RVCharacteristics rvc1(wiener_diff1, NSTEPS, h);
 	//rvc1.WriteToCsv(_EPSILON_);
 
+	//_sleep(1000);
 	//StockPrice sp;
 	//VSLStreamStatePtr stream = sp.InitGen();
+	//float *wiener_diff2 = new float[NSTEPS]; // Random values buffer
 	//sp.GenerateGauss(0, sqrt(h), NSTEPS, stream, wiener_diff2);
 	//RVCharacteristics rvc2(wiener_diff2, NSTEPS, h);
-	//rvc.WriteToCsv(_EPSILON_);
+	//rvc2.WriteToCsv(_EPSILON_);
 
 	//for (int i = 0; i < NSTEPS; ++i)
 	//	std::cout << wiener_diff[i] << "\t" << wiener_diff1[i] << "\t" << wiener_diff2[i] << std::endl;

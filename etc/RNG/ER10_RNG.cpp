@@ -1,18 +1,27 @@
 #include "ER10_RNG.h"
 
-MCG59::MCG59(long long int seed) : a(302875106592253), seed(seed) {
+MCG59::MCG59(long int seed) : a(302875106592253), seed(GetLongSeed(seed)) {
 	seed % 2 == 0 ? m = 576460752303423488 : m = 144115188075855872;
 };
 
+// need test
+long long int MCG59::GetLongSeed(long int seed) {
+	return (uint64_t) seed << 32 | seed;
+}
+
 void MCG59::RandomArray(float* _array, int len) {
 	for (int i = 0; i < len; ++i) {
-		seed = abs((a * seed) % m);
+		seed = (a * seed) % m;
+		if (seed < 0)
+			seed += m;
 		_array[i] = (float)seed / m;
 	}
 }
 
 float MCG59::GetFloat() {
-	seed = abs((a * seed) % m);
+	seed = (a * seed) % m;
+	if (seed < 0)
+		seed += m;
 	return (float)seed / m;
 }
 

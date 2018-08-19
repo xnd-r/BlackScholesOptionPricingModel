@@ -20,6 +20,8 @@ public:
 	void _V6(float *pT, float *pK, float *pS0, float *pC, float* pP);
 	void _V7(float *pT, float *pK, float *pS0, float *pC, float* pP);
 	void _V8(float *pT, float *pK, float *pS0, float *pC, float* pP);
+	void WriteToCsv(int threads);
+
 	CallPutOption::TGetOptionPrice version_array[8] =
 	{
 		&CallPutOption::_V0, // preference 1

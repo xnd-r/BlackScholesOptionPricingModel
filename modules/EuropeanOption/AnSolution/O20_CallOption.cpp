@@ -195,7 +195,7 @@ void CallOption::WriteToCsv(int threads) {
 	num_Threads = threads;
 	omp_set_num_threads(num_Threads);
 
-	float* pT = new float[5 * N];
+	float* pT = new float[4 * N];
 	float* pK = pT + N;
 	float* pS0 = pT + 2 * N;
 	float* pC = pT + 3 * N;
