@@ -19,12 +19,19 @@ Usage of stochastic differential equations to solve applied problems of financia
 
 <!-- /MarkdownTOC -->
 ***
-##### ***Main Project Class Diagram***
+##### Requirements:
+<!-- MarkdownTOC autolink="true" bracket="round" depth="5"-->
+- MKL Required
+- Gtest.lib Required
+- Intel Compiler Recommended
+<!-- /MarkdownTOC -->
+***
+##### ***Current Main Project Class Diagram***
 ![Alt text](etc/images/MainProjectTree.PNG "Main Project Tree")
 ***
-###### ***Main Project Class Diagram***
+###### ***Currnet Random Number Generators Class Diagram***
 ![Alt text](etc/images/RNG.PNG "Random Number Generators Class Tree")
 ***
-###### ***Math Statistics Class Diagram***
+###### ***Current Math Statistics Class Diagram***
 ![Alt text](etc/images/MathStat.PNG "Math Statistics Class Tree")
 ***
