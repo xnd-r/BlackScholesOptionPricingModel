@@ -48,16 +48,28 @@
     <ClCompile Include="..\modules\EuropeanOption\src\O00_EuropeanOption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O20_NumSolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O12_CallPutOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\AnSolution\O11_CallOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,13 +107,25 @@
     <ClInclude Include="..\modules\EuropeanOption\AnSolution\O10_AnSolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O20_CallOption.h">
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O20_NumSolution.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O21_CallPutOption.h">
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O11_CallOption.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O11_NumSolution.h">
+    <ClInclude Include="..\modules\EuropeanOption\AnSolution\O12_CallPutOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

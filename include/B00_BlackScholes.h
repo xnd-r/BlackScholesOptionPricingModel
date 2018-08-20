@@ -23,7 +23,11 @@
 
 
 class BlackScholes {
-	// todo: add ReadMe
+	// TODO: add ReadMe
+	// TODO: check OOP in whole project (abstraction, constructors, private/public sections)
+	// TODO: rework defines and constants
+	// NOTTOFORGET: defines are argv[i] or data from config.ini
+
 public:
 	BlackScholes() {};
 	~BlackScholes() {};
