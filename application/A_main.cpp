@@ -3,9 +3,9 @@
 #include "../modules/StockPriece/include/S32_NumMethodsWZ.h"	
 #include "../etc/MathStat/EM20_ChiSquared.h"
 #include "../etc/RNG/ER21_Normal.h"
-#include "../modules/EuropeanOption/AnSolution/O20_CallOption.h"
-#include "../modules/EuropeanOption/AnSolution/O21_CallPutOption.h"
-#include "../modules/EuropeanOption/NumSolution/O11_NumSolution.h"
+#include "../modules/EuropeanOption/AnSolution/O11_CallOption.h"
+#include "../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
+#include "../modules/EuropeanOption/NumSolution/O20_NumSolution.h"
 
 #include <iostream>
 
