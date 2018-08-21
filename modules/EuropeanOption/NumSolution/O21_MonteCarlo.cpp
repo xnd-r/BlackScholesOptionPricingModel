@@ -1,6 +1,7 @@
 #include "O21_MonteCarlo.h"
 #include "../RNG/ER21_Normal.h"
 
+
 float MonteCarlo::GetMCPrice(int indexGen) {
 	assert(N % bufsize == 0);
 	start = clock();
@@ -43,3 +44,45 @@ float MonteCarlo::GetMCPrice(int indexGen) {
 	t = (double)(finish - start) / CLOCKS_PER_SEC;
 	return sum;
 }
+
+float MonteCarlo::GetMCPrice(int indexGen, int NumThreads) {
+	assert(N % bufsize == 0);
+	start = clock();
+#pragma omp parallel private(s)
+	{
+		int count = omp_get_num_threads();
+		int num = omp_get_thread_num();
+
+		float *gauss = new float[bufsize];
+		VSLStreamStatePtr stream;
+
+
+		if (indexGen == 0) {
+			vslNewStreamEx(&stream, VSL_BRNG_MCG59, 2, seed);
+		}
+		else if (indexGen == 1) {
+			vslNewStream(&stream, VSL_BRNG_SOBOL, 1);
+		}
+		vslSkipAheadStream(stream, N / count * num);
+
+#pragma omp for reduction(+:sum)
+		for (unsigned int portion = 0; portion < N / bufsize; portion++) {
+
+			vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, bufsize, gauss, 0.0, 1.0);
+			for (int i = 0; i < bufsize; i++) {
+				float payoff;
+				s = S0 * expf(tmp1 + tmp2 * gauss[i]);
+				payoff = s - K;
+				if (payoff > 0.0)
+					sum = sum + payoff;
+			}
+		}
+		vslDeleteStream(&stream);
+		delete[] gauss;
+	}
+	sum = sum / N * exp(-R * TIME);
+	finish = clock();
+	t = (double)(finish - start) / CLOCKS_PER_SEC;
+	return sum;
+}
+

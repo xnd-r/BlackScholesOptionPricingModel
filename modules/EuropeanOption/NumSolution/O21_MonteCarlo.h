@@ -2,6 +2,7 @@
 #define ____MONTE_CARLO_METHOD____
 #include "../NumSolution/O20_NumSolution.h"
 #include <assert.h>
+#include <omp.h>
 
 class MonteCarlo : public NumSolutionOption {
 	float tmp1 = (R - SIG * SIG * 0.5f) * TIME;
@@ -11,5 +12,6 @@ class MonteCarlo : public NumSolutionOption {
 public:
 
 	float GetMCPrice(int indexGen);
+	float GetMCPrice(int indexGen, int NumThreads);
 };
 #endif // !____MONTE_CARLO_METHOD____

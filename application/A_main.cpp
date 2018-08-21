@@ -5,14 +5,13 @@
 #include "../etc/RNG/ER21_Normal.h"
 #include "../modules/EuropeanOption/AnSolution/O11_CallOption.h"
 #include "../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
-#include "../modules/EuropeanOption/NumSolution/O20_NumSolution.h"
-
+#include "../modules/EuropeanOption/NumSolution/O21_MonteCarlo.h"
 #include <iostream>
 
 int main() { 
 	
-	NumSolutionOption nso;
-	std::cout << nso.GetMCPrice(1) << nso.t;
+	MonteCarlo mc;
+	std::cout << mc.GetMCPrice(1) << mc.t;
 	//_sleep(500);
 	//CallOption co;
 	//co.WriteToCsv(4);

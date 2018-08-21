@@ -10,6 +10,6 @@ public:
 	float sum = 0.0f; 
 	float s; 
 	
-	virtual float GetMCPrice();
+	//virtual float GetMCPrice();
 };
 #endif // !____NUMERICAL_SOLUTION_OPTION____

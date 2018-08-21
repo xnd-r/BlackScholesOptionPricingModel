@@ -29,7 +29,7 @@ __declspec(noinline) void NumMethodWZ::SimulateWandZProcesses(VSLStreamStatePtr 
 
 	#if defined(__INTEL_COMPILER) 
 		#pragma simd
-		#pragma vector always	
+		//#pragma vector always	
 	#endif
 
 	for (int j = 2; j <= nSteps * 2; j += 2)

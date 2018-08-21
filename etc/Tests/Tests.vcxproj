@@ -135,7 +135,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="03_TestEuropeanOption.cpp" />
+    <ClCompile Include="03_TestCallOption.cpp" />
     <ClCompile Include="01_TestMain.cpp" />
     <ClCompile Include="02_TestStockPriece.cpp" />
   </ItemGroup>
