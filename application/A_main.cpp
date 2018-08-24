@@ -6,10 +6,15 @@
 #include "../modules/EuropeanOption/AnSolution/O11_CallOption.h"
 #include "../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
 #include "../modules/EuropeanOption/NumSolution/O21_MonteCarlo.h"
+#include "../modules/EuropeanOption/NumSolution/O22_QuadFormula.h"
+
 #include <iostream>
 
 int main() { 
 	
+	QuadratureFormula qf;
+	std::cout << qf.GetRPrice(-5.15f, 6.0f) << std::endl;
+
 	MonteCarlo mc;
 	std::cout << mc.GetMCPrice(1) << mc.t;
 	//_sleep(500);

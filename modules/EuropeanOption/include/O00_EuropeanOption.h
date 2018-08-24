@@ -17,7 +17,7 @@
 class EuropeanOption : public BlackScholes {
 public:
 	// TODO: make abstract 
-	virtual float GetMCPrice();
+	//virtual float GetMCPrice();
 };
 
 #endif // !____EUROPEAN_OPTION____

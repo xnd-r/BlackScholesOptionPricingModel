@@ -63,13 +63,7 @@
     <ClCompile Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.cpp">
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O22_QuadFormula.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,13 +113,7 @@
     <ClInclude Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.h">
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O22_QuadFormula.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

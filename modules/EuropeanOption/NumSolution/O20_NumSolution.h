@@ -5,6 +5,8 @@
 
 class NumSolutionOption : public EuropeanOption {
 public:
+	float tmp1 = (R - SIG * SIG * 0.5f) * TIME;
+	float tmp2 = SIG * sqrtf(TIME);
 	clock_t start, finish;
 	double t;
 	float sum = 0.0f; 

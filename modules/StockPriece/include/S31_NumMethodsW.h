@@ -7,7 +7,7 @@ class  NumMethodW : public NumMethods {
 public:
 	typedef float(NumMethodW::*Step) (float, float, float);
 
-	NumMethodW::Step step_array[3] = { &NumMethodW::EulMarStep, &NumMethodW::MilsteinStep, &NumMethodW::RK1Step };
+	NumMethodW::Step StepArray[3] = { &NumMethodW::EulMarStep, &NumMethodW::MilsteinStep, &NumMethodW::RK1Step };
 
 	float EulMarStep(float S, float dt, float dw);
 	float MilsteinStep(float S, float dt, float dw);

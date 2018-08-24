@@ -33,11 +33,11 @@ float MonteCarlo::GetMCPrice(int indexGen) {
 			float payoff;
 			s = S0 * expf(tmp1 + tmp2 * gauss[i]);
 			payoff = s - K;
-			if (payoff > 0.0)
+			if (payoff > 0.0f)
 				sum = sum + payoff;
 		}
 	}
-	sum = sum / N * exp(-R * TIME);
+	sum = sum / N * expf(-R * TIME);
 	//vslDeleteStream(&stream); 
 	delete[] gauss;
 	finish = clock();

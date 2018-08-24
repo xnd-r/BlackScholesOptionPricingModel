@@ -5,8 +5,7 @@
 #include <omp.h>
 
 class MonteCarlo : public NumSolutionOption {
-	float tmp1 = (R - SIG * SIG * 0.5f) * TIME;
-	float tmp2 = SIG * sqrtf(TIME);
+
 	const unsigned int bufsize = 1000;
 	const unsigned int seed[2] = { __SEED__, __SEED__ };
 public:
