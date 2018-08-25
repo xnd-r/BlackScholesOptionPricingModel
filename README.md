@@ -16,6 +16,8 @@ Usage of stochastic differential equations to solve applied problems of financia
 - Researc why after redefinition ```h = TIME / NSTEPS``` brokes calculating of Numerical Methods
 - Find problems in RK1 and Taylor2
 - Research `Warning LNK4075` : ```ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification```
+- Option Price obtained by the Trapeze method greater by 8e-02 compared to the rest
+- Optimize code
 
 <!-- /MarkdownTOC -->
 ***

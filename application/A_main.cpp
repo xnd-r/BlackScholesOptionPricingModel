@@ -13,10 +13,13 @@
 int main() { 
 	
 	QuadratureFormula qf;
-	std::cout << qf.GetRPrice(-5.15f, 6.0f) << std::endl;
+	std::cout << "Rectangle: "	<< qf.GetRPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "Trapeze: "	<< qf.GetTPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "Simpson: "	<< qf.GetSPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "3/8 Rule: "	<< qf.Get3_8Price(-5.15f, 6.0f) << " Time: " << qf.t << std::endl;
 
 	MonteCarlo mc;
-	std::cout << mc.GetMCPrice(1) << mc.t;
+	std::cout << "Monte-Carlo: " << mc.GetMCPrice(1) << " Time: " << mc.t << std::endl;
 	//_sleep(500);
 	//CallOption co;
 	//co.WriteToCsv(4);

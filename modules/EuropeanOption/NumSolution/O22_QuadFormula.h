@@ -7,7 +7,7 @@
 #define M_PIF 3.14159265358979323846f
 
 class QuadratureFormula : public NumSolutionOption {
-	int scale = 1000; // amount of segments in sum of Darbu
+	int scale = 1024; // amount of segments in sum of Darbu
 	float h; // == (b - a) / scale;
 	public:
 
@@ -18,8 +18,9 @@ class QuadratureFormula : public NumSolutionOption {
 	float Integrand(float x);
 		
 	float GetRPrice	(float a, float b);
-	float GetTPrice(float a, float b) { return 0; };
-	float GetSPrice(float a, float b) { return 0; };
+	float GetTPrice(float a, float b);
+	float GetSPrice(float a, float b);
+	float Get3_8Price(float a, float b);
 
 	//float GetRPrice(float a, float b, int NumThread) {};
 	//float GetTPrice(float a, float b, int NumThread) {};
