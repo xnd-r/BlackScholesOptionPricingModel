@@ -5,14 +5,21 @@
 #include "../etc/RNG/ER21_Normal.h"
 #include "../modules/EuropeanOption/AnSolution/O11_CallOption.h"
 #include "../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
-#include "../modules/EuropeanOption/NumSolution/O20_NumSolution.h"
+#include "../modules/EuropeanOption/NumSolution/O21_MonteCarlo.h"
+#include "../modules/EuropeanOption/NumSolution/O22_QuadFormula.h"
 
 #include <iostream>
 
 int main() { 
 	
-	NumSolutionOption nso;
-	std::cout << nso.GetMCPrice(1) << nso.t;
+	QuadratureFormula qf;
+	std::cout << "Rectangle: "	<< qf.GetRPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "Trapeze: "	<< qf.GetTPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "Simpson: "	<< qf.GetSPrice(-5.15f, 6.0f)	<< " Time: " << qf.t << std::endl;
+	std::cout << "3/8 Rule: "	<< qf.Get3_8Price(-5.15f, 6.0f) << " Time: " << qf.t << std::endl;
+
+	MonteCarlo mc;
+	std::cout << "Monte-Carlo: " << mc.GetMCPrice(1) << " Time: " << mc.t << std::endl;
 	//_sleep(500);
 	//CallOption co;
 	//co.WriteToCsv(4);

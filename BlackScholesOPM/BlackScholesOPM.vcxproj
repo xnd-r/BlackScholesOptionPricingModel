@@ -136,9 +136,7 @@
     <ClInclude Include="..\modules\EuropeanOption\include\O00_EuropeanOption.h" />
     <ClInclude Include="..\modules\EuropeanOption\NumSolution\O20_NumSolution.h" />
     <ClInclude Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.h" />
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.h" />
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.h" />
-    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.h" />
+    <ClInclude Include="..\modules\EuropeanOption\NumSolution\O22_QuadFormula.h" />
     <ClInclude Include="..\modules\StockPriece\include\S10_Wiener.h" />
     <ClInclude Include="..\modules\StockPriece\include\S20_AnSimple.h" />
     <ClInclude Include="..\modules\StockPriece\include\S21_AnExtended.h" />
@@ -157,9 +155,7 @@
     <ClCompile Include="..\modules\EuropeanOption\AnSolution\O12_CallPutOption.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\NumSolution\O20_NumSolution.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\NumSolution\O21_MonteCarlo.cpp" />
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O22_Trapeze.cpp" />
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O23_Rectangle.cpp" />
-    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O24_Simpson.cpp" />
+    <ClCompile Include="..\modules\EuropeanOption\NumSolution\O22_QuadFormula.cpp" />
     <ClCompile Include="..\modules\EuropeanOption\src\O00_EuropeanOption.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S10_Wiener.cpp" />
     <ClCompile Include="..\modules\StockPriece\src\S20_AnSimple.cpp" />
