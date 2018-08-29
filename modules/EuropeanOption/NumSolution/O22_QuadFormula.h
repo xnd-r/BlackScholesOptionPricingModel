@@ -8,7 +8,10 @@
 
 class QuadratureFormula : public NumSolutionOption {
 	int scale = 1024; // amount of segments in sum of Darbu
-	float h; // == (b - a) / scale;
+	float a = -5.15f;
+	float b = 6.0f;
+	float h = (b - a) / scale;
+	float* s_array;
 	public:
 
 	typedef float(QuadratureFormula::*Method)(float, float);
@@ -21,8 +24,9 @@ class QuadratureFormula : public NumSolutionOption {
 	float GetTPrice(float a, float b);
 	float GetSPrice(float a, float b);
 	float Get3_8Price(float a, float b);
-
-	//float GetRPrice(float a, float b, int NumThread) {};
+	void  SetS(int amo);
+	void Execute();
+	float GetRPrice(float a, float b, int NumThread);
 	//float GetTPrice(float a, float b, int NumThread) {};
 	//float GetSPrice(float a, float b, int NumThread) {};
 
