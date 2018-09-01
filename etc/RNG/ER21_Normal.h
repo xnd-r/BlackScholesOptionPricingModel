@@ -13,7 +13,7 @@ class  NormalGen : public MCG59 {
 	const float p4 = 0.453642210148e-4f;  const float q4 = 0.385607006340e-2f;
 
 public:
-	NormalGen(const float _mean, const float _var, long long int _seed);
+	NormalGen(const float _mean, const float _var, long int _seed);
 	float mean;
 	float variance;
 	float u, t, p, q, z;

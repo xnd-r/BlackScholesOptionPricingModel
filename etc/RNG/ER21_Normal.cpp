@@ -1,6 +1,6 @@
 #include "ER21_Normal.h"
 
-NormalGen::NormalGen(const float _m, const float _v, long long int _seed) : MCG59(_seed){
+NormalGen::NormalGen(const float _m, const float _v, long int _seed) : MCG59(_seed){
 	mean = _m;
 	variance = _v;
 }

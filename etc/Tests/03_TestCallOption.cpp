@@ -1,7 +1,8 @@
 // Copyright 2018 Romanov Alexander
 
 #include "gtest.h"
-
+//#include "../../modules/EuropeanOption/AnSolution/O11_CallOption.h"
+//#include "../../3rdparty/gtest/gtest.h"
 #include "../modules/EuropeanOption/AnSolution/O11_CallOption.h"
 
 using ::testing::internal::RE;

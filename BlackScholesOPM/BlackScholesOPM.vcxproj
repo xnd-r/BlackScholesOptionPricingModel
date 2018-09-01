@@ -91,11 +91,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../etc/MathStat;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../etc/MathStat;../etc/RNG</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <AdditionalDependencies>MathStat.lib;RNG.lib;</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Debug;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Debug;Release;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,9 +113,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalIncludeDirectories>../etc/MathStat;../etc/RNG</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies />
+      <AdditionalDependencies>MathStat.lib;RNG.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Debug;Release;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

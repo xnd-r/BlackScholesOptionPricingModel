@@ -1,9 +1,9 @@
 // Copyright 2018 Romanov Alexander
 
 #include "gtest.h"
-
 #include "../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
-
+//#include "../../modules/EuropeanOption/AnSolution/O12_CallPutOption.h"
+//#include "../../3rdparty/gtest/gtest.h"
 using ::testing::internal::RE;
 
 class Romanov_Alexander_Call_put_option : public ::testing::Test {

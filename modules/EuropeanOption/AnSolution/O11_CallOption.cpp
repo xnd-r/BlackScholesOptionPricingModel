@@ -144,19 +144,19 @@ void CallOption::_V7(float *pT, float *pK, float *pS0, float *pC)
 #if defined (__INTEL_COMPILER)
 #pragma simd
 #endif
-#pragma omp parallel for private(invf, d1, d2, erf1, erf2)
-	for (int i = 0; i < N; i++)
-	{
-		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
-			pT[i]) / (SIG * sqrtf(pT[i]));
-		d2 = (logf(pS0[i] / pK[i]) + (R - SIG * SIG * 0.5f) *
-			pT[i]) / (SIG * sqrtf(pT[i]));
-
-		erf1 = 0.5f + 0.5f * erff(d1 / sqrtf(2.0f));
-		erf2 = 0.5f + 0.5f * erff(d2 / sqrtf(2.0f));
-
-		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * R * pT[i]) * erf2;
-	}
+//#pragma omp parallel for private(invf, d1, d2, erf1, erf2)
+//	for (int i = 0; i < N; i++)
+//	{
+//		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
+//			pT[i]) / (SIG * sqrtf(pT[i]));
+//		d2 = (logf(pS0[i] / pK[i]) + (R - SIG * SIG * 0.5f) *
+//			pT[i]) / (SIG * sqrtf(pT[i]));
+//
+//		erf1 = 0.5f + 0.5f * erff(d1 / sqrtf(2.0f));
+//		erf2 = 0.5f + 0.5f * erff(d2 / sqrtf(2.0f));
+//
+//		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * R * pT[i]) * erf2;
+//	}
 }
 
 //omp_nontemporal
@@ -167,19 +167,19 @@ void CallOption::_V8(float *pT, float *pK, float *pS0, float *pC)
 #pragma simd 
 #pragma vector nontemporal
 #endif
-#pragma omp parallel for private(d1, d2, erf1, erf2)
-	for (int i = 0; i < N; i++)
-	{
-		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
-			pT[i]) / (SIG * sqrtf(pT[i]));
-		d2 = (logf(pS0[i] / pK[i]) + (R - SIG * SIG * 0.5f) *
-			pT[i]) / (SIG * sqrtf(pT[i]));
-
-		erf1 = 0.5f + 0.5f * erff(d1 / sqrtf(2.0f));
-		erf2 = 0.5f + 0.5f * erff(d2 / sqrtf(2.0f));
-
-		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * R * pT[i]) * erf2;
-	}
+//#pragma omp parallel for private(d1, d2, erf1, erf2)
+//	for (int i = 0; i < N; i++)
+//	{
+//		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
+//			pT[i]) / (SIG * sqrtf(pT[i]));
+//		d2 = (logf(pS0[i] / pK[i]) + (R - SIG * SIG * 0.5f) *
+//			pT[i]) / (SIG * sqrtf(pT[i]));
+//
+//		erf1 = 0.5f + 0.5f * erff(d1 / sqrtf(2.0f));
+//		erf2 = 0.5f + 0.5f * erff(d2 / sqrtf(2.0f));
+//
+//		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * R * pT[i]) * erf2;
+//	}
 }
 
 void CallOption::WriteToCsv(int threads) {
@@ -237,9 +237,9 @@ void CallOption::WriteToCsv(int threads) {
 		start = finish = 0.0;
 		int sum = 0;
 		int a[1024] = { 0 };
-		#pragma omp parallel for shared(a) reduction (+: sum) 
+		//#pragma omp parallel for shared(a) reduction (+: sum) 
 		{
-			# pragma omp for
+			//# pragma omp for
 			for (int i = 0; i < 4096; ++i)
 				sum += a[i];
 		}
