@@ -1,5 +1,8 @@
 #include "O21_MonteCarlo.h"
 #include "../RNG/ER21_Normal.h"
+//#include "../../../etc/RNG/ER21_Normal.h"
+
+// TODO: O21_MonteCarlo.cpp(50): warning C4101: 's': unreferenced local variable
 
 
 float MonteCarlo::GetMCPrice(int indexGen) {
@@ -26,7 +29,7 @@ float MonteCarlo::GetMCPrice(int indexGen) {
 	//	vslNewStream(&stream, VSL_BRNG_SOBOL, 1);
 	//}
 
-	for (unsigned int portion = 0; portion < N / bufsize; portion++) {
+	for (unsigned int portion = 0; portion < N / (unsigned int)bufsize; portion++) {
 
 		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, bufsize, gauss, 0.0, 1.0);
 		for (int i = 0; i < bufsize; i++) {
@@ -38,7 +41,7 @@ float MonteCarlo::GetMCPrice(int indexGen) {
 		}
 	}
 	sum = sum / N * expf(-R * TIME);
-	//vslDeleteStream(&stream); 
+	vslDeleteStream(&stream); 
 	delete[] gauss;
 	finish = clock();
 	t = (double)(finish - start) / CLOCKS_PER_SEC;
@@ -90,7 +93,6 @@ float MonteCarlo::GetMCPrice(int indexGen, int NumThreads) {
 void MonteCarlo::Execute() {
 	int tmp = 1;
 	double t1, t2;
-
 	for (int k = 1; k < 4; ++k) {
 		omp_set_num_threads(tmp);
 		for (int j = 0; j < 10; ++j) {
@@ -111,5 +113,4 @@ void MonteCarlo::Execute() {
 		Times.clear();
 		Prices.clear();
 	}
-	
 }

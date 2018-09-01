@@ -10,7 +10,7 @@
 class NumSolutionOption : public EuropeanOption {
 
 public:
-	const unsigned int bufsize = 5000;
+	const int bufsize = 1000;
 	float tmp1 = (R - SIG * SIG * 0.5f) * TIME;
 	float tmp2 = SIG * sqrtf(TIME);
 	clock_t start, finish;
