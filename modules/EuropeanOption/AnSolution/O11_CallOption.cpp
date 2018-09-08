@@ -58,7 +58,7 @@ void CallOption::_V2(float *pT, float *pK, float *pS0, float *pC)
 
 //restrict
 #if defined (__INTEL_COMPILER)
-void CallOption::_V3(float* restrict pT, float* restrict pK, float* restrict pS0, float* restrict pC)
+void CallOption::_V3(float* __restrict pT, float* __restrict pK, float* __restrict pS0, float* __restrict pC)
 {
 
 	for (int i = 0; i < N; i++)
@@ -141,9 +141,9 @@ void CallOption::_V6(float* pT, float* pK, float* pS0, float* pC)
 
 void CallOption::_V7(float *pT, float *pK, float *pS0, float *pC)
 {
-#if defined (__INTEL_COMPILER)
-#pragma simd
-#endif
+//#if defined (__INTEL_COMPILER)
+//#pragma simd
+//#endif
 //#pragma omp parallel for private(invf, d1, d2, erf1, erf2)
 //	for (int i = 0; i < N; i++)
 //	{
@@ -163,10 +163,10 @@ void CallOption::_V7(float *pT, float *pK, float *pS0, float *pC)
 
 void CallOption::_V8(float *pT, float *pK, float *pS0, float *pC)
 {
-#if defined (__INTEL_COMPILER)
-#pragma simd 
-#pragma vector nontemporal
-#endif
+//#if defined (__INTEL_COMPILER)
+//#pragma simd 
+//#pragma vector nontemporal
+//#endif
 //#pragma omp parallel for private(d1, d2, erf1, erf2)
 //	for (int i = 0; i < N; i++)
 //	{

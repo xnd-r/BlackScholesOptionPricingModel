@@ -61,21 +61,21 @@ void CallPutOption::_V2(float *pT, float *pK, float *pS0, float *pC, float *pP)
 
 //restrict
 #if defined (__INTEL_COMPILER)
-void CallPutOption::_V3(float* restrict pT, float* restrict pK, float* restrict pS0, float* restrict pC, float* restrict pP)
+void CallPutOption::_V3(float* __restrict pT, float* __restrict pK, float* __restrict pS0, float* __restrict pC, float* __restrict pP)
 {
 
 	for (int i = 0; i < N; i++)
 	{
-		d1 = (logf(pS0[i] / pK[i]) + (r + sig * sig * 0.5f) *
-			pT[i]) / (sig * sqrtf(pT[i]));
-		d2 = (logf(pS0[i] / pK[i]) + (r - sig * sig * 0.5f) *
-			pT[i]) / (sig * sqrtf(pT[i]));
+		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
+			pT[i]) / (SIG * sqrtf(pT[i]));
+		d2 = (logf(pS0[i] / pK[i]) + (R - SIG * SIG * 0.5f) *
+			pT[i]) / (SIG * sqrtf(pT[i]));
 
 		erf1 = 0.5f + 0.5f * erff(d1 / sqrtf(2.0f));
 		erf2 = 0.5f + 0.5f * erff(d2 / sqrtf(2.0f));
 
-		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * r * pT[i]) * erf2;
-		pP[i] = pC[i] - S0[i] + pK[i] * expf((-1.0f) * r * pT[i]);
+		pC[i] = pS0[i] * erf1 - pK[i] * expf((-1.0f) * R * pT[i]) * erf2;
+		pP[i] = pC[i] - pS0[i] + pK[i] * expf((-1.0f) * R * pT[i]);
 	}
 }
 #endif
@@ -149,10 +149,10 @@ void CallPutOption::_V6(float* pT, float* pK, float* pS0, float* pC, float *pP)
 void CallPutOption::_V7(float *pT, float *pK, float *pS0, float *pC, float *pP)
 {
 
-#if defined (__INTEL_COMPILER)
-#pragma simd
-#endif
-//#pragma omp parallel for private(invf, d1, d2, erf1, erf2)
+//#if defined (__INTEL_COMPILER)
+//#pragma simd
+//#endif
+//#pragma omp parallel for //private(invf, d1, d2, erf1, erf2)
 //	for (int i = 0; i < N; i++)
 //	{
 //		d1 = (logf(pS0[i] / pK[i]) + (R + SIG * SIG * 0.5f) *
@@ -172,12 +172,12 @@ void CallPutOption::_V7(float *pT, float *pK, float *pS0, float *pC, float *pP)
 
 void CallPutOption::_V8(float *pT, float *pK, float *pS0, float *pC, float *pP)
 {
-
-#if defined (__INTEL_COMPILER)
-#pragma simd
-#pragma vector nontemporal
-#endif
-
+//
+//#if defined (__INTEL_COMPILER)
+//#pragma simd
+//#pragma vector nontemporal
+//#endif
+//
 //#pragma omp parallel for private(d1, d2, erf1, erf2)
 //	for (int i = 0; i < N; i++)
 //	{

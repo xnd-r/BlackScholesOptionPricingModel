@@ -12,7 +12,7 @@ public:
 	void _V2(float *pT, float *pK, float *pS0, float *pC, float* pP);
 
 #if defined (__INTEL_COMPILER)
-	void _V3(float* restrict pT, float* restrict pK, flot pS0, float* restrict pC, float* pP);
+	void _V3(float* __restrict pT, float* __restrict pK, float* __restrict pS0, float* __restrict pC, float* pP);
 #endif
 
 	void _V4(float *pT, float *pK, float *pS0, float *pC, float* pP);
@@ -22,6 +22,7 @@ public:
 	void _V8(float *pT, float *pK, float *pS0, float *pC, float* pP);
 	void WriteToCsv(int threads);
 
+#if !defined (__INTEL_COMPILER)
 	CallPutOption::TGetOptionPrice version_array[8] =
 	{
 		&CallPutOption::_V0, // preference 1
@@ -33,9 +34,10 @@ public:
 		&CallPutOption::_V7, // #pragma simd #pragma omp parallel for private
 		&CallPutOption::_V8  // _V7 + #pragma vector nontemporal
 	};
+#endif
 
 #if defined (__INTEL_COMPILER)
-	PutOption::TGetOptionPrice version_array[9] =
+	CallPutOption::TGetOptionPrice version_array[9] =
 	{
 		&CallPutOption::_V0,
 		&CallPutOption::_V1,

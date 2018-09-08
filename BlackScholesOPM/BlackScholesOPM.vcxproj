@@ -93,10 +93,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../etc/MathStat;../etc/RNG</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
       <AdditionalDependencies>MathStat.lib;RNG.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>Debug;Release;</AdditionalLibraryDirectories>
+      <WPOAssemblyOutput>Asm_and_Source</WPOAssemblyOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
