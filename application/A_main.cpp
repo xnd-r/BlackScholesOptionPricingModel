@@ -12,8 +12,8 @@
 
 int main() { 
 	//clock_t start, finish;
-	QuadratureFormula qf;
-	qf.Execute();
+	//QuadratureFormula qf;
+	//qf.Execute();
 	//start = clock();
 	//for (int i = 0; i < 10000; ++i)
 	//	qf.GetRPrice(-5.15f, 6.0f);
@@ -83,13 +83,13 @@ int main() {
 	//ae.Execute();
 	//std::cout << "AnExtended Success" << std::endl;
 
-	//NumMethodW nmw;
-	//nmw.Execute(nmw.step_array[0], "_Euler_Marayama.csv");
-	//std::cout << "Euler Method Success" << std::endl;
-	//nmw.Execute(nmw.step_array[1], "_Milstein.csv");
-	//std::cout << "Milstein Method Success" << std::endl;
-	//nmw.Execute(nmw.step_array[2], "_RK1.csv");
-	//std::cout << "RK1 Method Success" << std::endl;
+	NumMethodW nmw;
+	nmw.Execute(nmw.StepArray[0], "_Euler_Marayama.csv");
+	std::cout << "Euler Method Finished" << std::endl << std::endl;
+	nmw.Execute(nmw.StepArray[1], "_Milstein.csv");
+	std::cout << "Milstein Method Finished" << std::endl << std::endl;
+	nmw.Execute(nmw.StepArray[2], "_RK1.csv");
+	std::cout << "RK1 Method Finished" << std::endl << std::endl;
 
 	//NumMethodWZ nmwz;
 	//nmwz.Execute(nmwz.step_array[0], "_Burrage_Platen.csv");

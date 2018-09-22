@@ -233,7 +233,6 @@ float QuadratureFormula::Get3_8Price(float a, float b, int NumThreads) {
 	return sum;
 }
 
-
 void QuadratureFormula::Execute() {
 	int tmp = 1;
 	double t1, t2;
