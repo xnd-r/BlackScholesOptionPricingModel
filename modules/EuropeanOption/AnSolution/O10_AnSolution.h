@@ -3,6 +3,8 @@
 #include "../include/O00_EuropeanOption.h"
 #include <omp.h>
 
+
+
 class AnSolutionOption : public EuropeanOption {
 public:
 

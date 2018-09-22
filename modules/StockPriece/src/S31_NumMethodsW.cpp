@@ -9,8 +9,8 @@ float NumMethodW::MilsteinStep(float S, float dt, float dw) {
 		0.5f * S * SIG * SIG * (dw * dw - dt);
 }
 
-float NumMethodW::RK1Step(float S, float dt, float dw) {
-	return S + S * (R * dt + SIG * dw) + 0.5f * (SIG * SIG * sqrt(dt)) * (dw * dw - dt);
+float NumMethodW::RK1Step(float S, float h, float dw) {
+	return S * (1.0f + R * h + SIG * dw + 0.5f * SIG * (R * h + SIG * sqrtf(h)) * (dw * dw - h) / sqrtf(h));
 }
 
 __declspec(noinline) void NumMethodW::SimulateStockPrices(Step _step, VSLStreamStatePtr stream, int nPaths, int nSteps, float Time, float *Error)
