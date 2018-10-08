@@ -17,7 +17,6 @@ float AnSolution::simulateStockPrice(
 		sbuffer[i] = getStockPrice(s0, r, sig, dw[i], time);
 		stockPrice += sbuffer[i];
 	}
-
 	freeGen(stream);
 	delete[] dw;
 	return stockPrice / npaths;
@@ -551,22 +550,6 @@ float AnSolution::writeToFile(int numVer, int num_Threads, int N, float* pT, flo
 		return (float)(finish - start) / CLOCKS_PER_SEC;
 		break;
 	}
-	//start = finish = 0.0;
-	//int sum = 0;
-	//int a[1024] = { 0 };
-	////#pragma omp parallel for shared(a) reduction (+: sum) 
-	//{
-	//	//# pragma omp for
-	//	for (int i = 0; i < 4096; ++i)
-	//		sum += a[i];
-	//}
-	//(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC);
-	//(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC);
-	//start = clock();
-	//(this->*version_array[VersionCount - 1])(pT, pK, pS0, pC);
-	//finish = clock();
-	//fprintf(f, "%i;%lf;%lf;\n", VersionCount - 1, pC[0], (float)(finish - start) / CLOCKS_PER_SEC);
-
 	fprintf(f, "\n");
 	fclose(f);
 }

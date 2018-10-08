@@ -1,14 +1,23 @@
 #include "BSOPM.h"
-
+#include <iostream>
 void BSOPM::wienerProcess(VSLStreamStatePtr stream, int nsteps, float time, float *dw) {
 	float *gaussBuf = new float[nsteps]; // Random values buffer
 	float dt = time / nsteps; 
 	// getting nsteps random values with N(0, dt):
 	normalGenerator(.0f, sqrtf(dt), nsteps, stream, gaussBuf);
+	//for (int i = 0; i < nsteps; ++i) {
+	//	std::cout << gaussBuf[i] << "\n";
+	//}
 	// getting Wiener differentials
 	dw[0] = .0f;
-	for (int j = 1; j <= nsteps; j++)
+
+	//std::string date = "_Distribution.csv";
+	//FILE *f = fopen(date.c_str(), "w");
+	for (int j = 1; j <= nsteps; j++) {
 		dw[j] = dw[j - 1] + gaussBuf[j - 1];
+		//fprintf(f, "%lf;\n", gaussBuf[j - 1]);
+	}
+	//fclose(f);
 	delete[] gaussBuf;
 }
 

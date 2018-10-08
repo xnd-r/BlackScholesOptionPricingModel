@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <vector>
 #include <stdio.h>
+#include <assert.h>
 
 #if defined(_WIN64) || defined(_WIN32) 
 #define _CRT_SECURE_NO_WARNINGS // using unsafe functions

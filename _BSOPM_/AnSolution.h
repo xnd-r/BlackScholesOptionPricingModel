@@ -27,6 +27,8 @@ public:
 	void restrictVer	(float* __restrict pT, float* __restrict pK, float* __restrict pS0, float* __restrict pC, int nsamples, float r, float sig);
 	void stdVectorVer	(std::vector<float>& T, std::vector<float>& K, std::vector<float>& S0, std::vector<float>& C, int nsamples, float r, float sig);
 
+	// TODO: add warmup	
+
 	void writeToFile	(float* buffer, int nrows, float avg);
 	void writeAllToFile(int num_Threads, int N, float* pT, float* pK, float* pS0, float* pC, float r, float sig, std::vector<float>& T, std::vector<float>& K, std::vector<float>& S0, std::vector<float>& C);
 	float writeToFile	(int numVer, int num_Threads, int N, float* pT, float* pK, float* pS0, float* pC, float r, float sig, std::vector<float>& T, std::vector<float>& K, std::vector<float>& S0, std::vector<float>& C);
