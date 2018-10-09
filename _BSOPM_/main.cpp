@@ -79,12 +79,12 @@ int main(int argc, char* argv[]) {
 	t2 = omp_get_wtime();
 	std::cout << "Call\t\t" << Call << "\t" << t2 - t1 << "\n";
 
-	//t1 = omp_get_wtime();
-	//Call = ns.getMCPricePar(2, NSTEPS, 0, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
-	//t2 = omp_get_wtime();
-	//std::cout << "Par Call\t" << Call << "\t" << t2 - t1 << "\n";
+	t1 = omp_get_wtime();
+	Call = ns.getMCPricePar(2, NSTEPS, 0, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	t2 = omp_get_wtime();
+	std::cout << "Par Call\t" << Call << "\t" << t2 - t1 << "\n";
 
-	std::cout << "Call via Rectangle: " << ns.GetRPrice(-5.15f, 6.f, 2, NPATHS, NSTEPS, S0, R, SIG, TIME, K) << "\n";
+	//std::cout << "Call via Rectangle: " << ns.GetRPrice(-5.15f, 6.f, 2, NPATHS, NSTEPS, S0, R, SIG, TIME, K) << "\n";
 
 	//ns.getErrors(NSTEPS, 0, 100000, __SEED__, K, R, TIME, SIG, S0, 1000);
 	//ns.SimulateStockPrices(3, NPATHS, NSTEPS, S0, R, SIG, TIME) << "\n";

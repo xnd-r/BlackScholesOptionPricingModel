@@ -20,6 +20,22 @@ public:
 	float getMCPricePar(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0);
 	void  getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0,int sampleStep);
 	float GetRPrice(float a, float b, int StepIndex, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float K);
+	float Integrand(float x);
+
+	float GetRPrice(float a, float b);
+	float GetTPrice(float a, float b);
+	float GetSPrice(float a, float b);
+	float Get3_8Price(float a, float b);
+	void SetS(int amo);
+	void Execute();
+
+	float* s_array;
+	float* exp_array;
+
+	float GetRPrice(float a, float b, int NumThread/*, float* s_array, float* expf_array*/);
+	float GetTPrice(float a, float b, int NumThread);
+	float GetSPrice(float a, float b, int NumThread);
+	float Get3_8Price(float a, float b, int NumThread);
 protected:
 	clock_t start, finish;
 	double t;
