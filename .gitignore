@@ -8,9 +8,12 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.csv
+#*.csv
 *.cd
 *.db
+*My Advisor Results*
+*My Inspector Results*
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
