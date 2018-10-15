@@ -12,10 +12,10 @@ public:
 	~NumSolution() {};
 
 	bool checkConvergence(int StepIndex, VSLStreamStatePtr stream, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float *error, unsigned int seed, int indexGen);
-	void WriteToCsv(float* Errors, int nsteps, int nrows, float time, int scale, int stepIndex);
+	void WriteMethodErrors(float* Errors, int nsteps, int nrows, float time, int scale, int stepIndex);
 	void Execute(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
-	void getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0,int sampleStep);
-	void MCExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0);
+	void getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0,int sampleStep, float fair);
+	void MCParExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0);
 	void Execute();
 	float getMCPricePar(int NumThreads, int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0, double& workTime);
 	float SimulateStockPrices(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);

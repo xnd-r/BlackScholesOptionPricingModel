@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 	NumSolution ns;
 	//
-	ns.Execute(1, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__);
+	//ns.Execute(1, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__);
 	//std::cout << "Analytical: \t\t";
 	//std::cout << as.simulateStockPriceAn(NPATHS, S0, R, SIG, TIME, sbuffer, __SEED__, INDEXGEN) << "\n";
 	//std::cout << "Numerical: \n";
@@ -65,26 +65,11 @@ int main(int argc, char* argv[]) {
 	//std::cout << "Milstein Vol: \t\t" << ns.SimulateStockPricesVol(1, NPATHS, NSTEPS, S0, pR, pSig, TIME, __SEED__, INDEXGEN) << "\n";
 	//std::cout << "MC Price via RK1: \t" << ns.getMCPrice(2, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0) << "\n";
 
-
-
-	//double t1, t2, t = 0.0;
-	//as.fpVer(pT, pK, pS0, pC, 1, R, SIG);
-	//std::cout << "BS: \t\t" << pC[0] << "\n";
-	//t1 = omp_get_wtime();
-	//float Call = ns.getMCPrice(0, NSTEPS, 0, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
-	//t2 = omp_get_wtime();
-	//std::cout << "Call\t\t" << Call << "\t" << t2 - t1 << "\n";
-
-	//t1 = omp_get_wtime();
-	//Call = ns.getMCPricePar(NUMTHREAD, 0, NSTEPS, 0, NSAMPLES, __SEED__, K, R, TIME, SIG, S0, t);
-	//t2 = omp_get_wtime();
-	//std::cout << "Par Call\t" << Call << "\t" << t2 - t1 << "\n";
-
-	//ns.MCExecute(2, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	//ns.MCParExecute(3, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
 
 	//std::cout << "Call via Rectangle: " << ns.GetRPrice(-5.15f, 6.f, 2, NPATHS, NSTEPS, S0, R, SIG, TIME, K) << "\n";
 
-	//ns.getErrors(NSTEPS, 0, 100000, __SEED__, K, R, TIME, SIG, S0, 1000);
+	ns.getErrors(NSTEPS, 0, 100000, __SEED__, K, R, TIME, SIG, S0, 1000, as.simulateStockPriceAn(NSTEPS, S0, R, SIG, TIME, sbuffer, __SEED__, INDEXGEN));
 	delete[] sbuffer;
 	delete[] pR;
 	delete[] pT;

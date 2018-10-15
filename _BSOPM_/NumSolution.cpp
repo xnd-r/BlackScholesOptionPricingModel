@@ -260,7 +260,7 @@ float NumSolution::getMCPrice(int StepIndex, int nsteps, int indexGen, int N, un
 
 	float payoff, sum = .0f, stockPrice;
 	for (unsigned int i = 0; i < N; i++) {
-			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps + 1) ], StepIndex, nsteps, pS0, R, SIG, Time);
+			StepIndex != 3 ? stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps + 1) ], StepIndex, nsteps, pS0, R, SIG, Time) : stockPrice = stockPricesIntegrator(stream, &wtraject[i * 2 * (nsteps + 1)], StepIndex, nsteps, pS0, R, SIG, Time);
 			payoff = stockPrice - K;
 			if (payoff > 0.f)
 				sum += payoff;
@@ -282,11 +282,12 @@ float NumSolution::getMCPricePar(int NumThreads, int StepIndex, int nsteps, int 
 	{
 		int count = omp_get_num_threads();
 		int num = omp_get_thread_num();
-		vslSkipAheadStream(stream, N * (nsteps + 1) / count * num); // if index == 3?
+		StepIndex != 3 ? vslSkipAheadStream(stream, N * (nsteps + 1) / count * num) : vslSkipAheadStream(stream, 2 * N * (nsteps + 1) / count * num);
+
 		float payoff;
 #pragma omp for private(payoff), reduction(+:sum)
 		for (int i = 0; i < N; i++) {
-			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps + 1)], StepIndex, nsteps, pS0, R, SIG, Time);
+			StepIndex != 3 ? stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps + 1)], StepIndex, nsteps, pS0, R, SIG, Time) : stockPrice = stockPricesIntegrator(stream, &wtraject[i * 2 * (nsteps + 1)], StepIndex, nsteps, pS0, R, SIG, Time);
 			payoff = stockPrice - K;
 			if (payoff > 0.f) 
 				sum += payoff;
@@ -300,16 +301,16 @@ float NumSolution::getMCPricePar(int NumThreads, int StepIndex, int nsteps, int 
 	return sum;
 }
 
-void NumSolution::MCExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0) {
+void NumSolution::MCParExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0) {
 	int tmp = 1;
 	double workTime = 0.0;
 	float tmp_price;
 	std::vector<double> Times;
 	std::vector<double> Prices;
-	for (int k = 1; k < 5; ++k) {
-		for (int j = 0; j < 7; ++j) {
+	for (int k = 1; k < 4; ++k) {
+		for (int j = 0; j < 5; ++j) {
 
-			tmp_price = getMCPricePar(tmp, 2, nsteps, indexGen, N, seed, K, R, Time, SIG, pS0, workTime);
+			tmp_price = getMCPricePar(tmp, StepIndex, nsteps, indexGen, N, seed, K, R, Time, SIG, pS0, workTime);
 			Times.push_back(workTime);
 			Prices.push_back(tmp_price);
 			std::cout << j << " Writing Done " << std::endl;
@@ -317,48 +318,38 @@ void NumSolution::MCExecute(int StepIndex, int nsteps, int indexGen, int N, unsi
 		std::sort(Times.begin(), Times.end());
 		for (std::vector<double>::const_iterator it = Times.begin(); it != Times.end(); ++it)
 			std::cout << *it << std::endl;
-		std::cout << " ####################### " << std::endl;
+		std::cout << "####################### " << std::endl;
 		for (std::vector<double>::const_iterator it = Prices.begin(); it != Prices.end(); ++it)
 			std::cout << *it << std::endl;
-		std::cout << tmp << " thread(stockPrice) done" << std::endl;
+		std::cout << tmp << " thread (stockPrice MCPar) Done" << std::endl;
 		tmp *= 2;
 		Times.clear();
 		Prices.clear();
+		std::cout << "MCPar Dode \n";
 	}
 
 }
-void NumSolution::WriteToCsv(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex) {
-	row_table rt;
-	time_t timestamp;
-	time(&timestamp);
-	std::string date = asctime(localtime(&timestamp));
-	date.pop_back();
+
+void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex) {
+
 	std::string fileName;
 	switch (stepIndex) {
 	case 0:
-		fileName = "_EulerMar.csv";
+		fileName = "EulerMar_";
 		break;
 	case 1:
-		fileName = "_Milstein.csv";
+		fileName = "Milstein_";
 		break;
 	case 2:
-		fileName = "_RK1.csv";
+		fileName = "RK1_";
 		break;
 	case 3:
-		fileName = "_BurragePlaten.csv";
+		fileName = "BurragePlaten_";
 		break;
-
 	}
-	date.append(fileName);
+	std::string date = std::to_string(nsteps).append("_Steps_").append(getTimestamp(fileName));
 
-	for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
-		if (*it == ':') {
-			date.erase(it);
-		}
-		std::replace(date.begin(), date.end(), ' ', '_');
-	}
-
-
+	row_table rt;
 	FILE *f = fopen(date.c_str(), "w");
 	fprintf(f, "step;e;log(step);log(e);\n");
 	for (int i = 0; i < nrows; ++i) {
@@ -367,44 +358,23 @@ void NumSolution::WriteToCsv(float* Errors, int nsteps, int nrows, float Time, i
 		for (std::string::iterator it = tmp_string.begin(); it<tmp_string.end(); ++it) {
 			std::replace(tmp_string.begin(), tmp_string.end(), '.', ',');
 		}
-		fprintf(f, "%stockPrice\n", tmp_string.c_str());
+		fprintf(f, "%s\n", tmp_string.c_str());
 	}
 	fclose(f);
 }
 
-void NumSolution::getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0, int sampleStep) {
-	time_t timestamp;
-	time(&timestamp);
-	std::string date = asctime(localtime(&timestamp));
-	date.pop_back();
-	std::string fileName;
-	date.append(std::to_string(N));
-	date.append("_Samples_");
-	date.append(std::to_string(sampleStep));
-	date.append("_Step_");
-	fileName = "_Errors.csv";
-	date.append(fileName);
+void NumSolution::getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0, int sampleStep, float fair) {
 
-
-	for (std::string::iterator it = date.begin(); it<date.end(); ++it) {
-		if (*it == ':') {
-			date.erase(it);
-		}
-		std::replace(date.begin(), date.end(), ' ', '_');
-	}
-
-
+	std::string date = std::to_string(N).append("_Samples_").append(std::to_string(sampleStep)).append("_Step_").append(getTimestamp("Errors_"));
 	FILE *f = fopen(date.c_str(), "w");
-
-	fprintf(f, "%stockPrice;%stockPrice;%stockPrice;%stockPrice\n;", "Euler", "Mils", "RK1", "Platen");
-	for (int i = 0; i < N; i += sampleStep) {
+	fprintf(f, "%sstockPrice;%sstockPrice;%sstockPrice;%sstockPrice\n;", "Euler ", "Mils ", "RK1 ", "Platen ");
+	for (int i = 0; i <= N; i += sampleStep) {
 		fprintf(f, "%lf;%lf;%lf;%lf\n", 
-			(getMCPrice(0, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - 20.9244),
-			(getMCPrice(1, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - 20.9244),
-			(getMCPrice(2, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - 20.9244), 
-			(getMCPrice(3, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - 20.9244));
+			(getMCPrice(0, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - fair),
+			(getMCPrice(1, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - fair),
+			(getMCPrice(2, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - fair),
+			(getMCPrice(3, nsteps, indexGen, i, seed, K, R, Time, SIG, pS0) - fair));
 		}
-	
 	fclose(f);
 
 }
@@ -413,7 +383,7 @@ void NumSolution::Execute(int StepIndex, int indexGen, int npaths, int nsteps, f
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float *Error = new float[8];
 	checkConvergence(StepIndex, stream, npaths, nsteps, pS0, pR, pSig, time, Error, seed, indexGen);
-	WriteToCsv(Error, nsteps, 8, time, 128, StepIndex);
+	WriteMethodErrors(Error, nsteps, 8, time, 128, StepIndex);
 	for (int i = 0; i < 8; i++)
 		printf("Error %d = %lf\n", i + 1, Error[i]);
 	freeGen(stream);
