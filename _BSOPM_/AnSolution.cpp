@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 float AnSolution::simulateStockPriceAn(int npaths, float s0, float r, float sig, float time, float* sbuffer, unsigned int seed, int indexGen) {
+
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float* dw = new float[npaths]; // random values with N(0, time) buffer
 	float stockPrice = .0f;

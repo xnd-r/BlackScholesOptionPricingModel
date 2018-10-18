@@ -12,21 +12,21 @@ public:
 	~NumSolution() {};
 
 	bool checkConvergence(int StepIndex, VSLStreamStatePtr stream, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float *error, unsigned int seed, int indexGen);
-	void WriteMethodErrors(float* Errors, int nsteps, int nrows, float time, int scale, int stepIndex);
+	void WriteToCsv(float* Errors, int nsteps, int nrows, float time, int scale, int stepIndex);
 	void Execute(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
-	void getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0,int sampleStep, float fair);
+	void getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0, int sampleStep, float fair);
 	void MCParExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0);
 	void Execute();
 	float getMCPricePar(int NumThreads, int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0, double& workTime);
 	float SimulateStockPrices(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
 	float SimulateStockPricesVol(int StepIndex, int npaths, int nsteps, float pS0, float* pR, float* pSig, float time, unsigned int seed, int indexGen);
-	
+	void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex);
 	float getMCPrice(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0);
 	float GetRPrice		(float a, float b);
 	float GetTPrice		(float a, float b);
 	float GetSPrice		(float a, float b);
 	float Get3_8Price	(float a, float b);
-	float GetRPrice		(float a, float b, int NumThread/*, float* s_array, float* expf_array*/);
+	float GetRPrice		(float a, float b, int NumThreads, int N, float K, float R, float TIME);
 	float GetTPrice		(float a, float b, int NumThread);
 	float GetSPrice		(float a, float b, int NumThread);
 	float Get3_8Price	(float a, float b, int NumThread);
@@ -34,9 +34,9 @@ public:
 protected:
 	clock_t start, finish;
 	double t;
-	void SetS(int amo);
-	void wienerProcessLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
-	void wAndZProcessesLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
+	void SetS(float a, float h, int amo, float r, float sig, float T, float pS0, float* s_array, float* expf_array, float SIG, float S0);
+	void wienerArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
+	void wAndZArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
 	void wAndZProcesses(VSLStreamStatePtr stream, int nsteps, float time, float *buffer);
 	float* memoryWrajectAlloc(VSLStreamStatePtr stream, int StepIndex, int npaths, int nsteps, float time, float* wtraject);
 	float* s_array;

@@ -13,6 +13,9 @@
 *.db
 *My Advisor Results*
 *My Inspector Results*
+etc/TestCoverage/
+3rdparty/gtest/
+
 
 
 # User-specific files (MonoDevelop/Xamarin Studio)
