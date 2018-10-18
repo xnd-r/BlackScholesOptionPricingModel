@@ -10,38 +10,30 @@ class NumSolution : public BSOPM {
 public:
 	NumSolution() {};
 	~NumSolution() {};
-
 	bool checkConvergence(int StepIndex, VSLStreamStatePtr stream, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float *error, unsigned int seed, int indexGen);
-	void WriteToCsv(float* Errors, int nsteps, int nrows, float time, int scale, int stepIndex);
-	void Execute(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
+	void writeMethodConvergence(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
 	void getErrors(int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0, int sampleStep, float fair);
 	void MCParExecute(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0);
-	void Execute();
 	float getMCPricePar(int NumThreads, int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0, double& workTime);
 	float SimulateStockPrices(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed);
 	float SimulateStockPricesVol(int StepIndex, int npaths, int nsteps, float pS0, float* pR, float* pSig, float time, unsigned int seed, int indexGen);
-	void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex);
 	float getMCPrice(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float S0);
-	float GetRPrice		(float a, float b);
-	float GetTPrice		(float a, float b);
-	float GetSPrice		(float a, float b);
-	float Get3_8Price	(float a, float b);
-	float GetRPrice		(float a, float b, int NumThreads, int N, float K, float R, float TIME);
-	float GetTPrice		(float a, float b, int NumThread);
-	float GetSPrice		(float a, float b, int NumThread);
-	float Get3_8Price	(float a, float b, int NumThread);
-	float GetRPrice(float a, float b, int StepIndex, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float K);
+	void WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex);
+	
+	void GetRPricePar	(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC);
+	void GetTPricePar	(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC);
+	void GetSPricePar	(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC);
+	void Get3_8PricePar	(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC);
+	void GetSPrice(float a, float b, int scale, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC);
+
 protected:
 	clock_t start, finish;
 	double t;
-	void SetS(float a, float h, int amo, float r, float sig, float T, float pS0, float* s_array, float* expf_array, float SIG, float S0);
 	void wienerArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
 	void wAndZArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w);
 	void wAndZProcesses(VSLStreamStatePtr stream, int nsteps, float time, float *buffer);
 	float* memoryWrajectAlloc(VSLStreamStatePtr stream, int StepIndex, int npaths, int nsteps, float time, float* wtraject);
-	float* s_array;
-	float* exp_array;
-	float Integrand(float x);
+	float Integrand(float z, float pS0, float K, float tmp1, float tmp2, int scale);
 	float EulMarStep(float S, float dt, float dw, float r, float sig);
 	float MilsteinStep(float S, float dt, float dw, float r, float sig);
 	float RK1Step(float S, float dt, float dw, float r, float sig);

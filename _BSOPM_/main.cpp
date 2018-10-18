@@ -7,9 +7,9 @@
 #define R			0.05f	// the interest rate; percent per year 0.05 -> 5%		
 #define S0			100.0f	// option price at t == 0
 #define NSTEPS		2048
-#define NPATHS		1000
-#define NSAMPLES	3000
-#define NUMTHREAD	2
+#define NPATHS		10000
+#define NSAMPLES	25000
+#define NUMTHREAD	4
 #define INDEXGEN	0
 #define K			100.0f	// strike price -- price fixed in option
 
@@ -45,40 +45,51 @@ int main(int argc, char* argv[]) {
 	std::vector<float> vC (NSAMPLES, .0f);
 
 	AnSolution as;
-	as.executeStockPrice(NSTEPS, NPATHS, TIME, S0, R, SIG, sbuffer, __SEED__, INDEXGEN);
-	as.writeAllFairs(NUMTHREAD, NSAMPLES, pT, pK, pS0, pC,R, SIG, vT, vK, vS0, vC);
-	as.writeOneVersion(2, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);
+	//as.executeStockPrice(NSTEPS, NPATHS, TIME, S0, R, SIG, sbuffer, __SEED__, INDEXGEN);
+	//as.writeAllFairs(NUMTHREAD, NSAMPLES, pT, pK, pS0, pC,R, SIG, vT, vK, vS0, vC);
+	//as.writeOneVersion(2, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);
 
 	NumSolution ns;
 	//
-	ns.Execute(2, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__); // Burrage-Platen is incorrect
+	//ns.writeMethodConvergence(2, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__); // Burrage-Platen is incorrect
 	std::cout << "Analytical: \t\t";
-	std::cout << as.simulateStockPriceAn(NPATHS, S0, R, SIG, TIME, sbuffer, __SEED__, INDEXGEN) << "\n";
+	//std::cout << as.simulateStockPriceAn(NPATHS, S0, R, SIG, TIME, sbuffer, __SEED__, INDEXGEN) << "\n";
 	//std::cout << "Numerical: \n";
-	std::cout << "Euler: \t\t\t"			<< ns.SimulateStockPrices(0, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
-	std::cout << "Milstein: \t\t"			<< ns.SimulateStockPrices(1, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
-	std::cout << "RK1: \t\t\t"				<< ns.SimulateStockPrices(2, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
-	std::cout << "Burrage-Platen: \t"		<< ns.SimulateStockPrices(3, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
-	std::cout << "Milstein Vol: \t\t"		<< ns.SimulateStockPricesVol(1, NPATHS, NSTEPS, S0, pR, pSig, TIME, __SEED__, INDEXGEN) << "\n";
-	std::cout << "MC Fair Price via RK1: \t"<< ns.getMCPrice(2, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0) << "\n";
+	//std::cout << "Euler: \t\t\t"			<< ns.SimulateStockPrices(0, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
+	//std::cout << "Milstein: \t\t"			<< ns.SimulateStockPrices(1, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
+	//std::cout << "RK1: \t\t\t"				<< ns.SimulateStockPrices(2, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
+	//std::cout << "Burrage-Platen: \t"		<< ns.SimulateStockPrices(3, INDEXGEN, NPATHS, NSTEPS, S0, R, SIG, TIME, __SEED__) << "\n";
+	//std::cout << "Milstein Vol: \t\t"		<< ns.SimulateStockPricesVol(1, NPATHS, NSTEPS, S0, pR, pSig, TIME, __SEED__, INDEXGEN) << "\n";
+	//std::cout << "MC Fair Price via RK1: \t"<< ns.getMCPrice(2, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0) << "\n";
 
-	//std::cout << "Rectangle Price Par: \t" << ns.GetRPrice(-5.15f, 6.f, NUMTHREAD, NPATHS, K, R, TIME);
-
+	as.fpVer(pT, pK, pS0, pC, 1, R, SIG);
+	std::cout << "BS: \t\t\t" << pC[0] << "\n";
 
 	double t1, t2, t = 0.0;
-	as.fpVer(pT, pK, pS0, pC, 1, R, SIG);
-	std::cout << "BS: \t\t" << pC[0] << "\n";
+
 	t1 = omp_get_wtime();
-	float Call = ns.getMCPrice(3, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	ns.Get3_8PricePar(-5.15f, 6.f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
 	t2 = omp_get_wtime();
-	std::cout << "Call\t\t" << Call << "\t" << t2 - t1 << "\n";
+	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+
+
+	t1 = omp_get_wtime();
+	ns.Get3_8PricePar(-5.15f, 6.f, 2000, NUMTHREAD, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	t2 = omp_get_wtime();
+	std::cout << "MC Simp\t\t" << pC[0] << "\t" << t2 - t1 << "\n";
+
+
+	//t1 = omp_get_wtime();
+	//float Call = ns.getMCPrice(3, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	//t2 = omp_get_wtime();
+	//std::cout << "Call\t\t" << Call << "\t" << t2 - t1 << "\n";
 
 	//t1 = omp_get_wtime();
 	//Call = ns.getMCPricePar(NUMTHREAD, 0, NSTEPS, 0, NSAMPLES, __SEED__, K, R, TIME, SIG, S0, t);
 	//t2 = omp_get_wtime();
 	//std::cout << "Par Call\t" << Call << "\t" << t2 - t1 << "\n";
 
-	ns.MCParExecute(3, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	//ns.MCParExecute(3, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
 
 	//std::cout << "Call via Rectangle: " << ns.GetRPrice(-5.15f, 6.f, 2, NPATHS, NSTEPS, S0, R, SIG, TIME, K) << "\n";
 
