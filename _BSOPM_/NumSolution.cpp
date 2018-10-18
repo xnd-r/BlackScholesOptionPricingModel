@@ -339,6 +339,7 @@ void NumSolution::MCParExecute(int StepIndex, int nsteps, int indexGen, int N, u
 	}
 
 }
+
 void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex) {
 
 	std::string fileName;
@@ -388,7 +389,6 @@ void NumSolution::getErrors(int nsteps, int indexGen, int N, unsigned int seed, 
 
 }
 
-
 void NumSolution::writeMethodConvergence(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed) {
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float *Error = new float[8];
@@ -400,249 +400,132 @@ void NumSolution::writeMethodConvergence(int StepIndex, int indexGen, int npaths
 	delete[] Error;
 }
 
-//
-//void NumSolution::SetS(float a, float h, int amo, float r, float sig, float T, float pS0, float* s_array, float* expf_array) {
-//
-//	float tmp1 = (r - sig * sig * 0.5f) * T;
-//	float tmp2 = sig * sqrtf(T);
-//#if defined(__INTEL_COMPILER) 
-//#pragma ivdep
-//#pragma vector always	
-//#endif
-//	int j = 0;
-//#pragma omp parallel for private(j) 
-//	for (j = 0; j < amo; ++j) {
-//		s_array[j] = pS0 * expf(tmp1 + tmp2 * (a + h * ((float)j + 0.5f)));
-//		exp_array[j] = expf(-(a + h * ((float)j + 0.5f)) * (a + h * ((float)j + 0.5f)) / 2.0f);
-//	}
-//}
-//
-//float NumSolution::GetRPrice(float a, float b, int NumThreads, int N, float K, float R, float TIME, float SIG, float S0) {
-//	float sum = 0.0f;
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float payoff;
-//	int i, ind;
-//	s_array = new float[scale];
-//	exp_array = new float[scale];
-//	start = clock();
-//	//SetS(a, h, scale, R, SIG, TIME, S0, ex);
-//	omp_set_num_threads(NumThreads);
-//#if defined(__INTEL_COMPILER) 
-//#pragma ivdep
-//#pragma vector always	
-//#endif
-//#pragma omp parallel for private(i, payoff, ind) reduction(+:sum)
-//	for (ind = 0; ind < N; ind++) {
-//		for (i = 0; i < scale; ++i) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum = sum + payoff;
-//		}
-//	}
-//	sum = (sum * expf(-R * TIME) * h) / sqrtf(2.0f * M_PIF);
-//	sum /= N;
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//
-//	return sum;
-//}
+float NumSolution::Integrand(float z, float pS0, float K, float tmp1, float tmp2, int scale) {
+	float payoff;
+	float stockPrice = pS0 * expf(tmp1 + tmp2 * z);
+	payoff = stockPrice - K;
+	payoff > 0.0f ? payoff *= expf(-z * z / 2.0f) : payoff = 0.0f;
+	return payoff;
+}
 
-//float NumSolution::Integrand(float z) {
-//	float payoff;	
-//	int scale = 2000;
-//	stockPrice = pS0 * expf(tmp1 + tmp2 * z);
-//	payoff = stockPrice - K;
-//	payoff > 0.0f ? payoff *= expf(-z * z / 2.0f) : payoff = 0.0f;
-//	return payoff;
-//}
-//
-//float NumSolution::GetRPrice(float a, float b) {
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	start = clock();
-//	for (int i = 0; i < scale; ++i)
-//		sum += Integrand(a + h * (i + 0.5f));
-//	sum = sum * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * h;
-//
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//
-//	return sum;
-//}
-//
-//float NumSolution::GetTPrice(float a, float b) {
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	start = clock();
-//
-//	sum += Integrand(a) * 0.5f * h + Integrand(b) * 0.5f * (b - a);
-//	for (int i = 1; i < scale - 1; ++i)
-//		sum += Integrand(a + h * i);
-//	sum = sum * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * h;
-//
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//
-//	return sum;
-//}
-//
-//float NumSolution::GetSPrice(float a, float b) {
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float sum2 = 0.0f;
-//
-//	start = clock();
-//	float sum4 = Integrand(a + h);
-//	sum += Integrand(a) + Integrand(b);
-//
-//	for (int i = 1; i < scale - 2; i += 2) {
-//		sum4 += Integrand(a + (i + 1)*h);
-//		sum2 += Integrand(a + i * h);
-//	}
-//
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//	sum = (sum + 4 * sum4 + 2 * sum2) * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
-//
-//	return sum;
-//}
-//
-//float NumSolution::Get3_8Price(float a, float b) {
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float sum2 = 0.0f;
-//	float sum3 = Integrand(a + h);
-//
-//	start = clock();
-//	sum += Integrand(a) + Integrand(b);
-//
-//	for (int i = 1; i < scale - 2; i += 3) {
-//		sum3 += Integrand(a + i * h);
-//	}
-//
-//	for (int i = 2; i < scale - 1; i += 3) {
-//		sum3 += Integrand(a + i * h);
-//	}
-//
-//	for (int i = 3; i < scale; i += 3) {
-//		sum2 += Integrand(a + i * h);
-//	}
-//
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//	sum = (sum + 3 * sum3 + 2 * sum2) * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * (3.0f * h / 8.0f);
-//
-//	return sum;
-//}
-//
-//
-//float NumSolution::GetTPrice(float a, float b, int NumThreads) {
-//	float sum;
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float payoff;
-//	int i, ind;
-//	start = clock();
-//	omp_set_num_threads(NumThreads);
-//#if defined(__INTEL_COMPILER) 
-//#pragma ivdep
-//#pragma vector always	
-//#endif
-//
-//	sum = (Integrand(a) + Integrand(b)) * 0.5f * h * (b - a);
-//#pragma omp parallel for private(i, payoff, ind) reduction(+:sum)
-//	for (ind = 0; ind < N; ind++) {
-//		for (int i = 1; i < scale - 1; ++i) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum = sum + payoff;
-//		}
-//	}
-//	sum = sum * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * h;
-//	sum /= N;
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//
-//	return sum;
-//}
-//
-//float NumSolution::GetSPrice(float a, float b, int NumThreads) {
-//	float sum;
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float payoff;
-//	int i, ind;
-//	float sum2 = 0.0f;
-//	start = clock();
-//	omp_set_num_threads(NumThreads);
-//#if defined(__INTEL_COMPILER) 
-//#pragma ivdep
-//#pragma vector always	
-//#endif
-//	float sum4 = Integrand(a + h);
-//	sum = Integrand(a) + Integrand(b);
-//
-//#pragma omp parallel for private(i, payoff, ind) reduction(+:sum2, sum4)
-//	for (ind = 0; ind < N; ind++) {
-//		for (int i = 1; i < scale - 2; i += 2) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum2 = sum2 + payoff;
-//
-//			payoff = s_array[i + 1] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i + 1] : payoff = 0.0f;
-//			sum4 = sum4 + payoff;
-//		}
-//	}
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//	sum = (sum + 4 * sum4 + 2 * sum2) * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
-//	sum /= N;
-//	return sum;
-//}
-//
-//
-//float NumSolution::Get3_8Price(float a, float b, int NumThreads) {
-//	float sum;
-//	int scale = 2000;
-//	float h = (b - a) / scale;
-//	float payoff;
-//	int i, ind;
-//	start = clock();
-//	omp_set_num_threads(NumThreads);
-//#if defined(__INTEL_COMPILER) 
-//#pragma ivdep
-//#pragma vector always	
-//#endif
-//	float sum2 = 0.0f;
-//	float sum3 = Integrand(a + h);
-//	sum += Integrand(a) + Integrand(b);
-//
-//#pragma omp parallel for private(i, payoff, ind) reduction(+:sum2, sum3)
-//	for (ind = 0; ind < N; ind++) {
-//		for (int i = 1; i < scale - 2; i += 3) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum3 = sum3 + payoff;
-//		}
-//
-//		for (int i = 2; i < scale - 1; i += 3) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum3 = sum3 + payoff;
-//		}
-//
-//		for (int i = 3; i < scale; i += 3) {
-//			payoff = s_array[i] - K;
-//			payoff > 0.0f ? payoff *= exp_array[i] : payoff = 0.0f;
-//			sum2 = sum2 + payoff;
-//		}
-//	}
-//	finish = clock();
-//	t = (double)(finish - start) / CLOCKS_PER_SEC;
-//	sum = (sum + 3 * sum3 + 2 * sum2) * expf(-R * TIME) / sqrtf(2.0f * M_PIF) * (3.0f * h / 8.0f);
-//	sum /= N;
-//	return sum;
-//}
-//
+void NumSolution::GetRPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+	float h = (b - a) / scale;
+	float sum = 0.f;
+	omp_set_nested(1); // does it works?
+	omp_set_num_threads(NumThreads);
+	float tmp1, tmp2;
+#if defined(__INTEL_COMPILER) 
+#pragma ivdep
+#pragma vector always	
+#endif
+#pragma omp parallel for private(tmp1, tmp2, sum)
+	for (int j = 0; j < N; ++j) {
+		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+		tmp2 = sig * sqrtf(pT[j]);
+		#pragma omp parallel for reduction(+:sum)
+		for (int i = 0; i < scale; ++i) {
+			sum += Integrand(a + h * (i + 0.5f), pS0[j], pK[j], tmp1, tmp2, scale);
+		}
+		sum = sum * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * h;
+		pC[j] = sum;
+	}
+}
+
+void NumSolution::GetTPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+	float h = (b - a) / scale;
+	float sum = 0.f;
+	omp_set_nested(1); // does it works?
+	omp_set_num_threads(NumThreads);
+	float tmp1, tmp2;
+#if defined(__INTEL_COMPILER) 
+#pragma ivdep
+#pragma vector always	
+#endif
+#pragma omp parallel for private(tmp1, tmp2, sum)
+	for (int j = 0; j < N; ++j) {
+		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+		tmp2 = sig * sqrtf(pT[j]);
+		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * h + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * (b - a);
+#pragma omp parallel for reduction(+:sum)
+	for (int i = 1; i < scale; ++i) {
+		sum += Integrand(a + h * i, pS0[j], pK[j], tmp1, tmp2, scale);
+	}
+	sum = sum * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * h;
+	pC[j] = sum;
+	}
+}
+
+void NumSolution::GetSPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+	float h = (b - a) / scale;
+	float sum2 = 0.f, sum = 0.f, sum4 = 0.f;
+//	omp_set_nested(1); // almost always is incorrect!!
+	omp_set_num_threads(NumThreads);
+	float tmp1, tmp2;
+#if defined(__INTEL_COMPILER) 
+#pragma ivdep
+#pragma vector always	
+#endif
+//#pragma omp parallel for private(tmp1, tmp2, sum, sum2, sum4)
+	for (int j = 0; j < N; ++j) {
+		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+		tmp2 = sig * sqrtf(pT[j]);
+		sum4 += Integrand(a + h, pS0[j], pK[j], tmp1, tmp2, scale);
+		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale);
+#pragma omp parallel for reduction(+:sum2, sum4)
+	for (int i = 1; i < scale - 2; i += 2) {
+		sum4 += Integrand(a + (i - 1) * h, pS0[j], pK[j], tmp1, tmp2, scale);
+		sum2 += Integrand(a + i * h, pS0[j], pK[j], tmp1, tmp2, scale);
+	}
+
+	sum = (sum + 4 * sum4 + 2 * sum2) * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
+	pC[j] = sum;
+	}
+}
+
+void NumSolution::GetSPrice(float a, float b, int scale, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+	float h = (b - a) / scale;
+	float sum2 = 0.f, sum = 0.f, sum4 = 0.f;
+	float tmp1, tmp2;
+#if defined(__INTEL_COMPILER) 
+#pragma ivdep
+#pragma vector always	
+#endif
+	for (int j = 0; j < N; ++j) {
+		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+		tmp2 = sig * sqrtf(pT[j]);
+		sum4 += Integrand(a + h, pS0[j], pK[j], tmp1, tmp2, scale);
+		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale);
+		for (int i = 1; i < scale - 2; i += 2) {
+			sum4 += Integrand(a + (i - 1)*h, pS0[j], pK[j], tmp1, tmp2, scale);
+			sum2 += Integrand(a + i * h, pS0[j], pK[j], tmp1, tmp2, scale);
+		}
+		sum = (sum + 4 * sum4 + 2 * sum2) * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
+		pC[j] = sum;
+	}
+}
+
+void NumSolution::Get3_8PricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+	assert(scale / 3 == 0);
+	float h = (b - a) / scale;
+	float sum3 = 0.f, sum2 = 0.f, sum = 0.f;
+	omp_set_num_threads(NumThreads);
+	float tmp1, tmp2;
+#if defined(__INTEL_COMPILER) 
+#pragma ivdep
+#pragma vector always	
+#endif
+	for (int j = 0; j < N; ++j) {
+		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+		tmp2 = sig * sqrtf(pT[j]);
+		sum3 = Integrand(a + h, pS0[j], pK[j], tmp1, tmp2, scale);
+		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale);
+#pragma omp parallel for reduction(+:sum2, sum3)
+		for (int i = 3; i < scale; i += 3) {
+			sum2 += Integrand(a + i * h, pS0[j], pK[j], tmp1, tmp2, scale);
+			sum3 += Integrand(a + (i - 2) * h, pS0[j], pK[j], tmp1, tmp2, scale);
+			sum3 += Integrand(a + (i - 1) * h, pS0[j], pK[j], tmp1, tmp2, scale);
+		}
+	sum = (sum + 3 * sum3 + 2 * sum2) * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * (3.0f * h / 8.0f);
+	pC[j] = sum;
+	}
+}
