@@ -2,8 +2,8 @@
 #include "AnSolution.h"
 #include "NumSolution.h"
 #include "stdafx.h"
-
 #include "../3rdparty/ConfigParser/config.h"
+#include "../3rdparty/OptionParser/optionparser.h"
 
 int main(int argc, char* argv[], char* envp[]) {
 
@@ -19,6 +19,14 @@ int main(int argc, char* argv[], char* envp[]) {
 		#define NUMTHREAD	config.pInt("NUMTHREAD")
 		#define INDEXGEN	config.pInt("INDEXGEN")
 		#define K			config.pFloat("K")		// strike price -- price fixed in option
+		#define __SEED__	config.pInt("__SEED__")
+		#define VERSION_INDEX config.pInt("VERSION_INDEX")
+	}
+
+	if (config.pBool("USE_VOLATILE_PARAMS")) {
+	#define VOLATILE_PARAMS
+	#define DELTA_R			config.pFloat("DELTA_R")
+	#define DELTA_SIG		config.pFloat("DELTA_SIG")
 	}
 
 	//int numVer	 = std::stoi(argv[1]);
@@ -32,14 +40,16 @@ int main(int argc, char* argv[], char* envp[]) {
 	float* pS0	= pT + 2 * NSAMPLES;
 	float* pC	= pT + 3 * NSAMPLES;
 
+	#if defined(VOLATILE_PARAMS)
 	#if defined(__INTEL_COMPILER) 
 	#pragma ivdep
 	#pragma vector always	
 	#endif
 	for (int i = 0; i < NSTEPS; i++) {
-		pR[i] = R + i * 0.00001;
-		pSig[i] = SIG + i * 0.00001;
+		pR[i] = R + i * DELTA_R;
+		pSig[i] = SIG + i * DELTA_SIG;
 	}
+	#endif
 	for (int i = 0; i < NSAMPLES; i++) {
 		pT[i]	= TIME;
 		pS0[i]	= S0;
@@ -52,9 +62,15 @@ int main(int argc, char* argv[], char* envp[]) {
 	std::vector<float> vC (NSAMPLES, .0f);
 
 	AnSolution as;
-	//as.executeStockPrice(NSTEPS, NPATHS, TIME, S0, R, SIG, sbuffer, __SEED__, INDEXGEN);
-	//as.writeAllFairs(NUMTHREAD, NSAMPLES, pT, pK, pS0, pC,R, SIG, vT, vK, vS0, vC);
-	//as.writeOneVersion(2, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);
+	if (config.pBool("GET_AN_SOLUTION")) {
+		as.executeStockPrice(NSTEPS, NPATHS, TIME, S0, R, SIG, sbuffer, __SEED__, INDEXGEN);	// Gives Stock An data in csv
+	}
+	if (config.pBool("AN_SOLUTION_FAIR")) {
+		as.writeOneVersion(VERSION_INDEX, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);	// Gives concrete Fair An data in csv
+	}
+	if (config.pBool("WRITE_ALL_FAIRS")) {
+		as.writeAllFairs(NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);			//  Gives All Fair An data in csv
+	}
 
 	NumSolution ns;
 	//
@@ -69,30 +85,30 @@ int main(int argc, char* argv[], char* envp[]) {
 	//std::cout << "Milstein Vol: \t\t"		<< ns.SimulateStockPricesVol(1, NPATHS, NSTEPS, S0, pR, pSig, TIME, __SEED__, INDEXGEN) << "\n";
 	//std::cout << "MC Fair Price via RK1: \t"<< ns.getMCPrice(2, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0) << "\n";
 
-	as.fpVer(pT, pK, pS0, pC, 1, R, SIG);
-	std::cout << "BS: \t\t\t" << pC[0] << "\n";
+	//as.fpVer(pT, pK, pS0, pC, 1, R, SIG);
+	//std::cout << "BS: \t\t\t" << pC[0] << "\n";
 
-	double t1, t2, t = 0.0;
+	//double t1, t2, t = 0.0;
 
-	t1 = omp_get_wtime();
-	ns.GetRPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
-	t2 = omp_get_wtime();
-	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+	//t1 = omp_get_wtime();
+	//ns.GetRPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	//t2 = omp_get_wtime();
+	//std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
 
-	t1 = omp_get_wtime();
-	ns.GetTPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
-	t2 = omp_get_wtime();
-	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
-	
-	t1 = omp_get_wtime();
-	ns.GetSPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
-	t2 = omp_get_wtime();
-	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+	//t1 = omp_get_wtime();
+	//ns.GetTPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	//t2 = omp_get_wtime();
+	//std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+	//
+	//t1 = omp_get_wtime();
+	//ns.GetSPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	//t2 = omp_get_wtime();
+	//std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
 
-	t1 = omp_get_wtime();
-	ns.Get3_8PricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
-	t2 = omp_get_wtime();
-	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+	//t1 = omp_get_wtime();
+	//ns.Get3_8PricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	//t2 = omp_get_wtime();
+	//std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
 
 
 
