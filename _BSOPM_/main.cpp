@@ -2,18 +2,25 @@
 #include "AnSolution.h"
 #include "NumSolution.h"
 #include "stdafx.h"
-#define TIME		3.f		// option execute time (years)
-#define SIG			0.2f	// volatility; percent per year 0.2 -> 20%
-#define R			0.05f	// the interest rate; percent per year 0.05 -> 5%		
-#define S0			100.0f	// option price at t == 0
-#define NSTEPS		2048
-#define NPATHS		10000
-#define NSAMPLES	25000
-#define NUMTHREAD	4
-#define INDEXGEN	0
-#define K			100.0f	// strike price -- price fixed in option
 
-int main(int argc, char* argv[]) {
+#include "../3rdparty/ConfigParser/config.h"
+
+int main(int argc, char* argv[], char* envp[]) {
+
+	Config config("BSOPM.config", envp);
+	if (config.pBool("USE_BSOPM_DEFINES")) {
+		#define TIME		config.pFloat("TIME")	// option execute time (years)
+		#define SIG			config.pFloat("SIG")	// volatility; percent per year 0.2 -> 20%
+		#define R			config.pFloat("R")		// the interest rate; percent per year 0.05 -> 5%
+		#define S0			config.pFloat("S0")		// option price at t == 0
+		#define NSTEPS		config.pInt("NSTEPS")
+		#define NPATHS		config.pInt("NPATHS")
+		#define NSAMPLES	config.pInt("NSAMPLES")
+		#define NUMTHREAD	config.pInt("NUMTHREAD")
+		#define INDEXGEN	config.pInt("INDEXGEN")
+		#define K			config.pFloat("K")		// strike price -- price fixed in option
+	}
+
 	//int numVer	 = std::stoi(argv[1]);
 	//int NSAMPLES 	 = std::stoi(argv[2]);
 	//int numThread	 = std::stoi(argv[3]);
@@ -68,15 +75,31 @@ int main(int argc, char* argv[]) {
 	double t1, t2, t = 0.0;
 
 	t1 = omp_get_wtime();
-	ns.Get3_8PricePar(-5.15f, 6.f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	ns.GetRPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	t2 = omp_get_wtime();
+	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+
+	t1 = omp_get_wtime();
+	ns.GetTPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	t2 = omp_get_wtime();
+	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+	
+	t1 = omp_get_wtime();
+	ns.GetSPricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	t2 = omp_get_wtime();
+	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
+
+	t1 = omp_get_wtime();
+	ns.Get3_8PricePar(-5.15f, 5.5f, 2000, 1, NSAMPLES, R, SIG, pT, pK, pS0, pC);
 	t2 = omp_get_wtime();
 	std::cout << "Par Call\t" << pC[0] << "\t" << t2 - t1 << "\n";
 
 
-	t1 = omp_get_wtime();
-	ns.Get3_8PricePar(-5.15f, 6.f, 2000, NUMTHREAD, NSAMPLES, R, SIG, pT, pK, pS0, pC);
-	t2 = omp_get_wtime();
-	std::cout << "MC Simp\t\t" << pC[0] << "\t" << t2 - t1 << "\n";
+
+	//t1 = omp_get_wtime();
+	//ns.Get3_8PricePar(-5.15f, 6.f, 2000, NUMTHREAD, NSAMPLES, R, SIG, pT, pK, pS0, pC);
+	//t2 = omp_get_wtime();
+	//std::cout << "MC Simp\t\t" << pC[0] << "\t" << t2 - t1 << "\n";
 
 
 	//t1 = omp_get_wtime();
