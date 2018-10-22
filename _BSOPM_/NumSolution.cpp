@@ -434,14 +434,14 @@ void NumSolution::GetRPricePar(float a, float b, int scale, int NumThreads, int 
 void NumSolution::GetTPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
 	float h = (b - a) / scale;
 	float sum = 0.f;
-	omp_set_nested(1); // does it works?
+//	omp_set_nested(1); // does it works?
 	omp_set_num_threads(NumThreads);
 	float tmp1, tmp2;
 #if defined(__INTEL_COMPILER) 
 #pragma ivdep
 #pragma vector always	
 #endif
-#pragma omp parallel for private(tmp1, tmp2, sum)
+//#pragma omp parallel for private(tmp1, tmp2, sum)
 	for (int j = 0; j < N; ++j) {
 		tmp1 = (r - sig * sig * 0.5f) * pT[j];
 		tmp2 = sig * sqrtf(pT[j]);
