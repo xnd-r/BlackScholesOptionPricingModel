@@ -15,6 +15,7 @@
 *My Inspector Results*
 etc/TestCoverage/
 3rdparty/gtest/
+3rdparty/OptionParser/
 
 
 

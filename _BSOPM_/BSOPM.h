@@ -20,8 +20,6 @@
 
 #endif
 
-#define __SEED__	20000000l
-
 class BSOPM {
 
 public:
