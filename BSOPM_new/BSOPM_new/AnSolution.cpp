@@ -1,26 +1,72 @@
 #include "AnSolution.h"
-#include "stdafx.h"
 
-float AnSolution::simulateStockPriceAn(int npaths, float s0, float r, float sig, float time, float* sbuffer, unsigned int seed, int indexGen) {
+float AnSolution::simulateStockPriceAn(int npaths, float s0, float r, float sig, float time, unsigned int seed, int indexGen, double workTime) {
 
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float* dw = new float[npaths]; // random values with N(0, time) buffer
 	float stockPrice = .0f;
-	normalGenerator(0.f, sqrtf(time), npaths, stream, dw);
+	double t1, t2;
 
-#if defined(__INTEL_COMPILER) 
-		#pragma ivdep
-		#pragma vector always	
-#endif
-
+	vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, npaths, dw, 0.f, sqrtf(time));
+	t1 = omp_get_wtime();
+	//#pragma novector
+	// #pragma ivdep
+	// #pragma vector always
+	// 100% of work time of algo required on a generation of random numbers
 	for (int i = 0; i < npaths; i++) {
-		sbuffer[i] = getStockPrice(s0, r, sig, dw[i], time);
-		stockPrice += sbuffer[i];
+		 stockPrice += (s0 * expf((r - sig * sig / 2.f) * time + sig * dw[i]));
 	}
-
-	freeGen(stream);
+	t2 = omp_get_wtime();	
+	workTime = t2 - t1;
+	vslDeleteStream(&stream);
 	delete[] dw;
 	return stockPrice / npaths;
+}
+
+float AnSolution::simulateStockPriceAnOptedPar(long int npaths, float s0, float r, float sig, float time, 
+	unsigned int seed, int indexGen, bool is_optimized, int numthreds, double &workTime) {
+	//int bufsize = npaths / 1000;
+	//float stockPrice;
+	//double result = 0.;
+ //	double t1, t2;
+	//t1 = omp_get_wtime();		
+	//omp_set_num_threads(numthreds);
+
+	//int dim = 1;	
+	//
+	//if(is_optimized){
+	//	#define __OPT__ 1
+	//}
+	//#pragma omp parallel private(stockPrice)
+	//{	
+	//	int count = omp_get_num_threads();
+	//	int num = omp_get_thread_num();
+	//	float* dw = new float[bufsize];		
+	//	VSLStreamStatePtr stream = initGen(seed, indexGen);
+	//	vslSkipAheadStream(stream, npaths / count * num);
+
+	//	#pragma omp for reduction(+:result)
+	//	for(int portion = 0; portion < npaths / bufsize; ++portion)
+	//	{
+	//		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, bufsize, dw, 0.0, sqrtf(time));
+	//		//#if defined __OPT__
+	//		#pragma ivdep
+	//		#pragma vector always
+	//		// #else
+	//		// #pragma novector
+	//		// #endif
+	//		for (int i = 0; i < bufsize; i++)
+	//		{
+	//			stockPrice = (double)(s0 * expf((r - sig * sig / 2.f) * time + sig * dw[i]));
+	//			result += stockPrice;
+	//		} 	
+	//	}
+	//vslDeleteStream(&stream);
+	//delete[] dw;
+	//}	
+	//t2 = omp_get_wtime();
+	//workTime = t2 - t1;
+	return 0;/*result / npaths;*/
 }
 
 void AnSolution::writeStockPriceAn(float* buffer, int nrows, float avg) {
@@ -39,8 +85,8 @@ void AnSolution::writeStockPriceAn(float* buffer, int nrows, float avg) {
 }
 
 void AnSolution::executeStockPrice(int nsteps, int npaths, float time, float pS0, float pR, float pSig, float* sbuffer, unsigned int seed, int indexGen) {
-
-	float avg = simulateStockPriceAn(npaths, pS0, pR, pSig, time, sbuffer, seed, indexGen);
+	double workTime = 0.;
+	float avg = simulateStockPriceAn(npaths, pS0, pR, pSig, time, /*sbuffer,*/ seed, indexGen, workTime);
 	writeStockPriceAn(sbuffer, npaths, avg);
 	//printf("Average price = %lf\n", avg);
 }
@@ -48,33 +94,33 @@ void AnSolution::executeStockPrice(int nsteps, int npaths, float time, float pS0
 // preliminary
 void AnSolution::baseVer(float* pT, float* pK, float* pS0, float* pC, int nsamples, float r, float sig)
 {
-	float d1, d2, p1, p2;
-	for (int i = 0; i < nsamples; i++)
-	{
-		d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
-			pT[i]) / (sig * sqrt(pT[i]));
-		d2 = (log(pS0[i] / pK[i]) + (r - sig * sig * 0.5) *
-			pT[i]) / (sig * sqrt(pT[i]));
-		vsCdfNorm(1, &d1, &p1);
-		vsCdfNorm(1, &d2, &p2);
-		pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
-	}
+	//float d1, d2, p1, p2;
+	//for (int i = 0; i < nsamples; i++)
+	//{
+	//	d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
+	//		pT[i]) / (sig * sqrt(pT[i]));
+	//	d2 = (log(pS0[i] / pK[i]) + (r - sig * sig * 0.5) *
+	//		pT[i]) / (sig * sqrt(pT[i]));
+	//	vsCdfNorm(1, &d1, &p1);
+	//	vsCdfNorm(1, &d2, &p2);
+	//	pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
+	//}
 }
 
 // equivalent transformation of d[1]
 
 void AnSolution::eqBaseVer(float* pT, float* pK, float* pS0, float* pC, int nsamples, float r, float sig)
 {
-	float d1, d2, p1, p2;
-	for (int i = 0; i < nsamples; i++)
-	{
-		d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
-			pT[i]) / (sig * sqrt(pT[i]));
-		d2 = d1 - sig * sqrt(pT[i]);
-		vsCdfNorm(1, &d1, &p1);
-		vsCdfNorm(1, &d2, &p2);
-		pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
-	}
+	//float d1, d2, p1, p2;
+	//for (int i = 0; i < nsamples; i++)
+	//{
+	//	d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
+	//		pT[i]) / (sig * sqrt(pT[i]));
+	//	d2 = d1 - sig * sqrt(pT[i]);
+	//	vsCdfNorm(1, &d1, &p1);
+	//	vsCdfNorm(1, &d2, &p2);
+	//	pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
+	//}
 }
 
 // upd equivalent transformation of d[1]
@@ -511,7 +557,11 @@ float AnSolution::writeOneVersion(int numVer, int num_Threads, int N, float* pT,
 		fprintf(f, "%i;%lf;%lf;\n", 9, C[0], (float)(finish - start) / CLOCKS_PER_SEC);
 		return (float)(finish - start) / CLOCKS_PER_SEC;
 		break;
+	default:
+		return -1;
+		break;
 	}
+
 	fprintf(f, "\n");
 	fclose(f);
 }

@@ -29,11 +29,9 @@ using namespace std;
    the parsing process. Names for expansion are searched from the current sub group
    upwards. Finally the process environment is searched, so also environment
    variables may be used as expansion symbols in the config file.
-
-   Errors and warnings are handled by emitting logging messages (see log.h/log.cpp)
-   or by calling exit() for severe errors. Depending on project needs this may be replaced
-   by exeptions, error return codes, ...
  */
+
+// Refactored by A. Romanov, 2019
 
 class Config {
 	public:
@@ -53,8 +51,14 @@ class Config {
 		 */
 		bool pBool(string name);
 
-		// get double config entry; value is parsed using atof()
-		double pFloat(string name);
+		// get double config entry; value is parsed using stod()
+		double pDouble(string name);
+
+		// get float config entry; value is parsed using stof()
+		float pFloat(string name);
+
+		// get long long config entry; value is parsed using stoll()
+		long long pLongLong(string name);		
 
 		// get int config entry; value is parsed using atoi()
 		int pInt(string name);
