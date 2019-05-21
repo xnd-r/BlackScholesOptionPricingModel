@@ -5,8 +5,6 @@
 #include <stdlib.h>
 using namespace std;
 
-#include "log.h"
-
 Config::Config(string name, string parentDebugInfo) {
 	debugInfo = parentDebugInfo + ", " + name;
 }
@@ -19,7 +17,6 @@ Config::Config(string configFile, char** envp) {
 			string name = envEntry.substr(0, pos);
 			string value = envEntry.substr(pos+1, string::npos);
 			envSymbols[name] = value;
-			logDebug(cout << "environment symbol: '" << name << "' = '" << value << "'" << endl);
 		}
 		++envp;
 	}
@@ -43,7 +40,6 @@ Config::Config(string configFile, char** envp) {
 			split(line, name, value, '=');
 
 			if (value == "(") {
-				logDebug(cout << "   config: new group '" << name << "'" << endl);
 				Config* newGroup = new Config(name, debugInfo);
 				groupStack.front()->groups[name] = newGroup;
 				groupStack.push_front(newGroup);
@@ -52,12 +48,10 @@ Config::Config(string configFile, char** envp) {
 					(*i)->symbolExpand(value);
 				}
 				envSymbolExpand(value);
-				logDebug(cout << "   config: name = '" << name << "', value = '" << value << "'" << endl);
 				groupStack.front()->add(name, value);
 			}
 		}
 		if ( (line.length() > 0) && (line[0] != '#') && (line.find(')') != string::npos) ) {
-			logDebug(cout << "   end of group" << endl);
 			groupStack.pop_front();
 		}
 	}
@@ -139,7 +133,6 @@ void Config::symbolExpand(map<string, string>& symbols, string& s) {
 string Config::pString(string name) {
 	map<string, string>::iterator i = symbols.find(name);
 	if (i == symbols.end()) {
-		logError(cout << "access of missing property '" << name << "' (" << debugInfo << ")" << endl);
 		exit(4);
 	}
 	return i->second;
@@ -161,14 +154,27 @@ bool Config::pBool(string name) {
 	return false;
 }
 
-double Config::pFloat(string name) {
+double Config::pDouble(string name) {
 	string val = pString(name);
 
-	return static_cast<float>(atof(val.c_str()));
+	return stod(val.c_str());
+}
+
+
+float Config::pFloat(string name) {
+	string val = pString(name);
+
+	return stof(val.c_str());
 }
 
 int Config::pInt(string name) {
 	string val = pString(name);
 
 	return atoi(val.c_str());
+}
+
+long long Config::pLongLong(string name) {
+	string val = pString(name);
+
+	return stoll(val.c_str());
 }

@@ -21,22 +21,6 @@ float NumSolution::BurragePlatenStep(float S, float dt, float dw, float dz, floa
 		(1.f / 3.f * dw * dw - dt) * dw;
 }
 
-void NumSolution::wAndZProcesses(VSLStreamStatePtr stream, int nsteps, float time, float *buffer) {
-	float *dw = new float[nsteps * 2];
-	float dt = time / nsteps;
-	float mean[2] = { 0.f, 0.f };
-	float hh = dt * sqrtf(dt);
-	float cov[3] = { sqrtf(dt) , 0.5f * hh , 1.0f / sqrtf(12.0f) * hh };
-
-	vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps, dw, 2, VSL_MATRIX_STORAGE_PACKED, mean, cov);
-	buffer[0] = 0; buffer[1] = 0;
-	for (int j = 2; j <= nsteps * 2; j += 2)
-	{
-		buffer[j]	  = buffer[j - 2] + dw[j - 2];
-		buffer[j + 1] = buffer[j - 1] + dw[j - 1];
-	}
-	delete[] dw;
-}
 
 void NumSolution::wAndZArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsamples, float time, float *w) {
 	float dt = time / nsteps;
@@ -44,29 +28,23 @@ void NumSolution::wAndZArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsam
 	float hh = dt * sqrtf(dt);
 	float cov[3] = { sqrtf(dt) , 0.5f * hh , 1.0f / sqrtf(12.0f) * hh };
 	vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * nsamples, w, 2, VSL_MATRIX_STORAGE_PACKED, mean, cov);
-
-}
-
-void NumSolution::wienerArrayLarge(VSLStreamStatePtr stream, int nsteps, int npaths, float time, float *w) {
-		normalGenerator(.0f, sqrtf(time/nsteps), nsteps * npaths, stream, w);
 }
 
 float* NumSolution::memoryWrajectAlloc(VSLStreamStatePtr stream, int StepIndex, int npaths, int nsteps, float time, float* wtraject) {
 // legacy
 	if (StepIndex != 3) {
 		wtraject = new float[npaths * nsteps];
-		wienerArrayLarge(stream, nsteps, npaths, time, wtraject); 
-	}
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));	}
 	else {
 		wtraject = new float[npaths * (nsteps) * 2];
-		wAndZArrayLarge(stream, nsteps, npaths, time, wtraject);
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
 	}
 	return wtraject;
 }
 
-bool NumSolution::checkConvergence(int StepIndex, VSLStreamStatePtr stream, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float *Error, unsigned int seed, int indexGen)
+void NumSolution::checkConvergence(int StepIndex, VSLStreamStatePtr stream, int npaths, int nsteps, float pS0, float pR, float pSig, float time, float *Error, unsigned int seed, int indexGen)
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 12; i++)
 		Error[i] = 0.0f;
 	float* wtraject;
 	if (StepIndex != 3) {
@@ -80,18 +58,17 @@ bool NumSolution::checkConvergence(int StepIndex, VSLStreamStatePtr stream, int 
 
 		if (StepIndex != 3) {
 			wienerProcess(stream, nsteps, time, wtraject);
-			S_An = getStockPrice(pS0, pR, pSig, wtraject[nsteps], time); // one or scope of trajectories?
+			S_An = pS0 * expf((pR - pSig * pSig / 2.f) * time + pSig * wtraject[nsteps]);
 
 		}
 		else {
 			wAndZProcesses(stream, nsteps, time, wtraject);
-			S_An = getStockPrice(pS0, pR, pSig, wtraject[nsteps * 2], time);
-
+			S_An = pS0 * expf((pR - pSig * pSig / 2.f) * time + pSig * wtraject[nsteps * 2]);
 		}
-		float S_Num[8]; // array of S(t) for different scaling 
-		int scale = 128;
+		float S_Num[12]; // array of S(t) for different scaling 
+		int scale = 2048;
 
-		for (int j = 0; j < 8; j++) {
+		for (int j = 0; j < 12; j++) {
 			S_Num[j] = pS0;
 			int numMethodSteps = nsteps / scale;
 			float dt = time / numMethodSteps;
@@ -102,6 +79,7 @@ bool NumSolution::checkConvergence(int StepIndex, VSLStreamStatePtr stream, int 
 					index += scale;
 					S_Num[j] = EulMarStep(S_Num[j], dt, wtraject[index] - wtraject[index - scale], pR, pSig);
 				}
+				//std::cout << i << "\t" << j << "\t" << numMethodSteps << "\t" << scale <<"\n";
 				break;
 			case 1: // MilsteinStep
 				for (int k = 0; k < numMethodSteps; k++) {
@@ -130,10 +108,9 @@ bool NumSolution::checkConvergence(int StepIndex, VSLStreamStatePtr stream, int 
 		}
 	}
 
-	for (int j = 0; j < 8; j++)
+	for (int j = 0; j < 12; j++)
 		Error[j] = Error[j] / npaths;
 	delete[] wtraject;
-	return Error[7] < 0.01 ? true : false;
 }
 
 float NumSolution::stockPricesIntegrator(VSLStreamStatePtr stream, float* wtraject, int StepIndex, int nsteps, float pS0, float pR, float pSig, float time)
@@ -170,6 +147,7 @@ float NumSolution::stockPricesIntegrator(VSLStreamStatePtr stream, float* wtraje
 }
 
 float NumSolution::stockPricesIntegratorVol(VSLStreamStatePtr stream, float* wtraject, int StepIndex, int nsteps, float pS0, float* pR, float* pSig, float time)
+// legacy?
 {
 	float dt = time / nsteps;
 	float stockPrice = pS0;
@@ -208,7 +186,7 @@ float NumSolution::SimulateStockPrices(int StepIndex, int indexGen, int npaths, 
 	float* wtraject;//= memoryWrajectAlloc(stream, StepIndex, npaths, nsteps, time, wtraject);
 	if (StepIndex != 3) {
 		wtraject = new float[npaths * nsteps];
-		wienerArrayLarge(stream, nsteps, npaths, time, wtraject);
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
 	}
 	else {
 		wtraject = new float[npaths * nsteps * 2];
@@ -220,7 +198,7 @@ float NumSolution::SimulateStockPrices(int StepIndex, int indexGen, int npaths, 
 		stockPrice += stockPricesIntegrator(stream, &wtraject[i * (nsteps)], StepIndex, nsteps, pS0, pR, pSig, time);
 	}
 	//delete[] wtraject; // ???????????
-	freeGen(stream);
+	vslDeleteStream(&stream);
 	return stockPrice / npaths;
 }
 
@@ -230,7 +208,7 @@ float NumSolution::SimulateStockPricesVol(int StepIndex, int npaths, int nsteps,
 	float* wtraject;// = memoryWrajectAlloc(stream, StepIndex, npaths, nsteps, time, wtraject);
 	if (StepIndex != 3) {
 		wtraject = new float[npaths * (nsteps)];
-		wienerArrayLarge(stream, nsteps, npaths, time, wtraject);
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
 	}
 	else {
 		wtraject = new float[npaths * (nsteps) * 2];
@@ -242,7 +220,7 @@ float NumSolution::SimulateStockPricesVol(int StepIndex, int npaths, int nsteps,
 		stockPrice += stockPricesIntegratorVol(stream, &wtraject[i * (nsteps)], StepIndex, nsteps, pS0, pR, pSig, time);
 	}
 	delete[] wtraject;
-	freeGen(stream);
+	vslDeleteStream(&stream);
 	return stockPrice / npaths;
 }
 
@@ -251,14 +229,14 @@ float NumSolution::getMCPrice(int StepIndex, int nsteps, int indexGen, int N, un
 	float* wtraject;// = memoryWrajectAlloc(stream, StepIndex, N, nsteps, Time, wtraject);
 	if (StepIndex != 3) {
 		wtraject = new float[N * (nsteps)];
-		wienerArrayLarge(stream, nsteps, N, Time, wtraject);
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * N, wtraject, 0.f, sqrtf(Time/nsteps));
 	}
 	else {
 		wtraject = new float[N * (nsteps) * 2];
 		wAndZArrayLarge(stream, nsteps, N, Time, wtraject);
 	}
 	float payoff, sum = .0f, stockPrice;
-	for (unsigned int i = 0; i < N; i++) {
+	for (int i = 0; i < N; i++) {
 		StepIndex != 3 ? 
 			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps)	 ], StepIndex, nsteps, pS0, R, SIG, Time) : 
 			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps) * 2], StepIndex, nsteps, pS0, R, SIG, Time);
@@ -277,8 +255,7 @@ float NumSolution::getMCPricePar(int NumThreads, int StepIndex, int nsteps, int 
 	float* wtraject;// = memoryWrajectAlloc(stream, StepIndex, N, nsteps, Time, wtraject);
 		if (StepIndex != 3) {
 		wtraject = new float[N * (nsteps)];
-		wienerArrayLarge(stream, nsteps, N, Time, wtraject); 
-	}
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * N, wtraject, 0.f, sqrtf(Time/nsteps));	}
 	else {
 		wtraject = new float[N * (nsteps) * 2];
 		wAndZArrayLarge(stream, nsteps, N, Time, wtraject);
@@ -340,7 +317,25 @@ void NumSolution::MCParExecute(int StepIndex, int nsteps, int indexGen, int N, u
 
 }
 
-void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float Time, int scale, int stepIndex) {
+
+std::string createString(double Error, int nsteps, int scale, double time) {
+	std::string res;
+
+	res.append(std::to_string(time / static_cast<float>(nsteps / scale)));
+	res.append(";");
+	res.append(std::to_string(Error));
+	res.append(";");
+	res.append(std::to_string(log10(time / static_cast<float>(nsteps / scale))));
+	res.append(";");
+	res.append(std::to_string(log10(Error)));
+	res.append(";");
+	
+	return res;
+}
+
+
+
+void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int npaths, int nrows, float Time, int scale, int stepIndex) {
 
 	std::string fileName;
 	switch (stepIndex) {
@@ -357,14 +352,12 @@ void NumSolution::WriteMethodErrors(float* Errors, int nsteps, int nrows, float 
 		fileName = "BurragePlaten_";
 		break;
 	}
-	std::string date = std::to_string(nsteps).append("_Steps_").append(getTimestamp(fileName));
+	std::string date = std::to_string(nsteps).append("_Steps_").append(std::to_string(npaths)).append("_Paths_").append(std::to_string(Time)).append("_Years_").append(getTimestamp(fileName));
 
-	row_table rt;
 	FILE *f = fopen(date.c_str(), "w");
 	fprintf(f, "step;e;log(step);log(e);\n");
 	for (int i = 0; i < nrows; ++i) {
-		rt.setValues(Errors[i], nsteps, static_cast<int>(scale / pow(2, i)), nrows, Time);
-		std::string tmp_string = rt.createString();
+		std::string tmp_string = createString(Errors[i], nsteps, static_cast<int>(scale / pow(2, i)), Time);
 		for (std::string::iterator it = tmp_string.begin(); it<tmp_string.end(); ++it) {
 			std::replace(tmp_string.begin(), tmp_string.end(), '.', ',');
 		}
@@ -391,12 +384,12 @@ void NumSolution::getErrors(int nsteps, int indexGen, int N, unsigned int seed, 
 
 void NumSolution::writeMethodConvergence(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed) {
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
-	float *Error = new float[8];
+	float *Error = new float[12];
 	checkConvergence(StepIndex, stream, npaths, nsteps, pS0, pR, pSig, time, Error, seed, indexGen);
-	WriteMethodErrors(Error, nsteps, 8, time, 128, StepIndex);
-	for (int i = 0; i < 8; i++)
+	WriteMethodErrors(Error, nsteps, npaths, 12, time, 2048, StepIndex);
+	for (int i = 0; i < 12; i++)
 		printf("Error %d = %lf\n", i + 1, Error[i]);
-	freeGen(stream);
+	vslDeleteStream(&stream);
 	delete[] Error;
 }
 
@@ -431,29 +424,29 @@ void NumSolution::GetRPricePar(float a, float b, int scale, int NumThreads, int 
 	}
 }
 
-void NumSolution::GetTPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
-	float h = (b - a) / scale;
-	float sum = 0.f;
-//	omp_set_nested(1); // does it works?
-	omp_set_num_threads(NumThreads);
-	float tmp1, tmp2;
-#if defined(__INTEL_COMPILER) 
-#pragma ivdep
-#pragma vector always	
-#endif
-//#pragma omp parallel for private(tmp1, tmp2, sum)
-	for (int j = 0; j < N; ++j) {
-		tmp1 = (r - sig * sig * 0.5f) * pT[j];
-		tmp2 = sig * sqrtf(pT[j]);
-		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * h + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * (b - a);
-#pragma omp parallel for reduction(+:sum)
-	for (int i = 1; i < scale; ++i) {
-		sum += Integrand(a + h * i, pS0[j], pK[j], tmp1, tmp2, scale);
-	}
-	sum = sum * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * h;
-	pC[j] = sum;
-	}
-}
+// void NumSolution::GetTPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+// 	float h = (b - a) / scale;
+// 	float sum = 0.f;
+// //	omp_set_nested(1); // does it works?
+// 	omp_set_num_threads(NumThreads);
+// 	float tmp1, tmp2;
+// #if defined(__INTEL_COMPILER) 
+// #pragma ivdep
+// #pragma vector always	
+// #endif
+// //#pragma omp parallel for private(tmp1, tmp2, sum)
+// 	for (int j = 0; j < N; ++j) {
+// 		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+// 		tmp2 = sig * sqrtf(pT[j]);
+// 		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * h + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale) * 0.5f * (b - a);
+// #pragma omp parallel for reduction(+:sum)
+// 	for (int i = 1; i < scale; ++i) {
+// 		sum += Integrand(a + h * i, pS0[j], pK[j], tmp1, tmp2, scale);
+// 	}
+// 	sum = sum * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * h;
+// 	pC[j] = sum;
+// 	}
+// }
 
 void NumSolution::GetSPricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
 	float h = (b - a) / scale;
@@ -482,29 +475,30 @@ void NumSolution::GetSPricePar(float a, float b, int scale, int NumThreads, int 
 	}
 }
 
-void NumSolution::GetSPrice(float a, float b, int scale, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
-	float h = (b - a) / scale;
-	float sum2 = 0.f, sum = 0.f, sum4 = 0.f;
-	float tmp1, tmp2;
-#if defined(__INTEL_COMPILER) 
-#pragma ivdep
-#pragma vector always	
-#endif
-	for (int j = 0; j < N; ++j) {
-		tmp1 = (r - sig * sig * 0.5f) * pT[j];
-		tmp2 = sig * sqrtf(pT[j]);
-		sum4 += Integrand(a + h, pS0[j], pK[j], tmp1, tmp2, scale);
-		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale);
-		for (int i = 1; i < scale - 2; i += 2) {
-			sum4 += Integrand(a + (i - 1)*h, pS0[j], pK[j], tmp1, tmp2, scale);
-			sum2 += Integrand(a + i * h, pS0[j], pK[j], tmp1, tmp2, scale);
-		}
-		sum = (sum + 4 * sum4 + 2 * sum2) * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
-		pC[j] = sum;
-	}
-}
+// void NumSolution::GetSPrice(float a, float b, int scale, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+// 	float h = (b - a) / scale;
+// 	float sum2 = 0.f, sum = 0.f, sum4 = 0.f;
+// 	float tmp1, tmp2;
+// #if defined(__INTEL_COMPILER) 
+// #pragma ivdep
+// #pragma vector always	
+// #endif
+// 	for (int j = 0; j < N; ++j) {
+// 		tmp1 = (r - sig * sig * 0.5f) * pT[j];
+// 		tmp2 = sig * sqrtf(pT[j]);
+// 		sum4 += Integrand(a + h, pS0[j], pK[j], tmp1, tmp2, scale);
+// 		sum += Integrand(a, pS0[j], pK[j], tmp1, tmp2, scale) + Integrand(b, pS0[j], pK[j], tmp1, tmp2, scale);
+// 		for (int i = 1; i < scale - 2; i += 2) {
+// 			sum4 += Integrand(a + (i - 1)*h, pS0[j], pK[j], tmp1, tmp2, scale);
+// 			sum2 += Integrand(a + i * h, pS0[j], pK[j], tmp1, tmp2, scale);
+// 		}
+// 		sum = (sum + 4 * sum4 + 2 * sum2) * expf(-r * pT[j]) / sqrtf(2.0f * M_PIF) * (h / 3.0f);
+// 		pC[j] = sum;
+// 	}
+// }
 
 void NumSolution::Get3_8PricePar(float a, float b, int scale, int NumThreads, int N, float r, float sig, float* pT, float* pK, float* pS0, float* pC) {
+// legacy
 	assert(scale / 3 == 0);
 	float h = (b - a) / scale;
 	float sum3 = 0.f, sum2 = 0.f, sum = 0.f;
