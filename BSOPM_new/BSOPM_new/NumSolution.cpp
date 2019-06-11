@@ -27,8 +27,17 @@ void NumSolution::wAndZArrayLarge(VSLStreamStatePtr stream, int nsteps, int nsam
 	float mean[2] = { 0.f, 0.f };
 	float hh = dt * sqrtf(dt);
 	float cov[3] = { sqrtf(dt) , 0.5f * hh , 1.0f / sqrtf(12.0f) * hh };
-	vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * nsamples, w, 2, VSL_MATRIX_STORAGE_PACKED, mean, cov);
+	vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIANMV_ICDF, stream, nsteps * nsamples, w, 2, VSL_MATRIX_STORAGE_PACKED, mean, cov);
 }
+
+void BPMemAlloc(VSLStreamStatePtr stream, int nsteps, float time, float *w) {
+	float dt = time / nsteps;
+	float mean[2] = { 0.f, 0.f };
+	float hh = dt * sqrtf(dt);
+	float cov[3] = { sqrtf(dt) , 0.5f * hh , 1.0f / sqrtf(12.0f) * hh };
+	vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIANMV_ICDF, stream, nsteps, w, 2, VSL_MATRIX_STORAGE_PACKED, mean, cov);
+}
+
 
 float* NumSolution::memoryWrajectAlloc(VSLStreamStatePtr stream, int StepIndex, int npaths, int nsteps, float time, float* wtraject) {
 // legacy
@@ -37,7 +46,7 @@ float* NumSolution::memoryWrajectAlloc(VSLStreamStatePtr stream, int StepIndex, 
 		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));	}
 	else {
 		wtraject = new float[npaths * (nsteps) * 2];
-		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
+		vsRngGaussian(VSL_RNG_METHOD_GAUSSIANMV_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
 	}
 	return wtraject;
 }
@@ -147,58 +156,39 @@ float NumSolution::stockPricesIntegrator(VSLStreamStatePtr stream, float* wtraje
 }
 
 float NumSolution::stockPricesIntegratorVol(VSLStreamStatePtr stream, float* wtraject, int StepIndex, int nsteps, float pS0, float* pR, float* pSig, float time)
-// legacy?
-{
-	float dt = time / nsteps;
-	float stockPrice = pS0;
-
-	switch (StepIndex) {
-	case 0: // EulMarStep
-		for (int k = 0; k < nsteps; k++) {
-			stockPrice = EulMarStep(stockPrice, dt, wtraject[k], pR[k], pSig[k]);
-		}
-		break;
-	case 1: // MilsteinStep
-		for (int k = 0; k < nsteps; k++) {
-			stockPrice = MilsteinStep(stockPrice, dt, wtraject[k], pR[k], pSig[k]);
-		}
-		break;
-	case 2: // RK1Step
-		for (int k = 0; k < nsteps; k++) {
-			stockPrice = RK1Step(stockPrice, dt, wtraject[k], pR[k], pSig[k]);
-		}
-		break;
-	case 3: // BurragePlatenStep
-		float dw, dz;
-		for (int k = 0; k < nsteps; k++) {
-			dw = wtraject[k * 2];
-			dz = wtraject[k * 2 + 1];
-			stockPrice = BurragePlatenStep(stockPrice, dt, dw, dz, pR[k], pSig[k]);
-		}
-		break;
-	}
-	return stockPrice;
+{	
+	return 0.f;
 }
 
 float NumSolution::SimulateStockPrices(int StepIndex, int indexGen, int npaths, int nsteps, float pS0, float pR, float pSig, float time, unsigned int seed)
 {
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float* wtraject;//= memoryWrajectAlloc(stream, StepIndex, npaths, nsteps, time, wtraject);
-	if (StepIndex != 3) {
-		wtraject = new float[npaths * nsteps];
-		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
-	}
-	else {
-		wtraject = new float[npaths * nsteps * 2];
-		wAndZArrayLarge(stream, nsteps, npaths, time, wtraject);
-	}
+	
+		//if (StepIndex != 3) {
+	//	wtraject = new float[npaths * nsteps];
+	//	vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
+	//}
+	//else {
+	//	wtraject = new float[npaths * nsteps * 2];
+	//	wAndZArrayLarge(stream, nsteps, npaths, time, wtraject);
+	//}
 	float stockPrice = 0.f;
 	float dt = time / nsteps;
-	for (int i = 0; i < npaths; i++) {
-		stockPrice += stockPricesIntegrator(stream, &wtraject[i * (nsteps)], StepIndex, nsteps, pS0, pR, pSig, time);
+	double t1, t2, sum_time = 0.0;
+	StepIndex != 3 ? wtraject = new float[nsteps] : wtraject = new float[2 * nsteps];
+	for (int ind = 0; ind < npaths; ++ind) {
+		StepIndex != 3 ? vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps, wtraject, 0.f, sqrtf(time / nsteps)) :
+				BPMemAlloc(stream, nsteps, time, wtraject);
+		t1 = omp_get_wtime();
+			stockPrice += stockPricesIntegrator(stream, wtraject, StepIndex, nsteps, pS0, pR, pSig, time);
+		t2 = omp_get_wtime();
+		sum_time += (t2 - t1);
 	}
-	//delete[] wtraject; // ???????????
+	delete[] wtraject; // ???????????
 	vslDeleteStream(&stream);
+	std::cout << "Stock Price via " << StepIndex << " method is " << stockPrice / npaths << std::endl;
+	std::cout << sum_time << std::endl;
 	return stockPrice / npaths;
 }
 
@@ -224,6 +214,43 @@ float NumSolution::SimulateStockPricesVol(int StepIndex, int npaths, int nsteps,
 	return stockPrice / npaths;
 }
 
+float NumSolution::MC(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0)
+{
+	VSLStreamStatePtr stream = initGen(seed, indexGen);
+	float* wtraject;//= memoryWrajectAlloc(stream, StepIndex, npaths, nsteps, time, wtraject);
+
+		//if (StepIndex != 3) {
+	//	wtraject = new float[npaths * nsteps];
+	//	vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * npaths, wtraject, 0.f, sqrtf(time/nsteps));
+	//}
+	//else {
+	//	wtraject = new float[npaths * nsteps * 2];
+	//	wAndZArrayLarge(stream, nsteps, npaths, time, wtraject);
+	//}
+	float summ = 0.f, payoff, SP = 0.f;
+	float dt = Time / nsteps;
+	double t1, t2, sum_time = 0.0;
+	StepIndex != 3 ? wtraject = new float[nsteps] : wtraject = new float[2 * nsteps];
+	for (int ind = 0; ind < N; ++ind) {
+		StepIndex != 3 ? vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps, wtraject, 0.f, sqrtf(Time / nsteps)) :
+			BPMemAlloc(stream, nsteps, Time, wtraject);
+		t1 = omp_get_wtime();
+		SP = stockPricesIntegrator(stream, wtraject, StepIndex, nsteps, pS0, R, SIG, Time);
+		payoff = SP - K;
+		if (payoff > 0.f)
+			summ += payoff;
+		t2 = omp_get_wtime();
+		sum_time += (t2 - t1);
+	}
+	summ = summ / N * expf(-R * Time);
+	delete[] wtraject; // ???????????
+	vslDeleteStream(&stream);
+	std::cout << "Stock Price via " << StepIndex << " method is " << summ / N << std::endl;
+	//std::cout << sum_time << std::endl;
+	return summ / N;
+}
+
+
 float NumSolution::getMCPrice(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0) {
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
 	float* wtraject;// = memoryWrajectAlloc(stream, StepIndex, N, nsteps, Time, wtraject);
@@ -236,23 +263,27 @@ float NumSolution::getMCPrice(int StepIndex, int nsteps, int indexGen, int N, un
 		wAndZArrayLarge(stream, nsteps, N, Time, wtraject);
 	}
 	float payoff, sum = .0f, stockPrice;
+	double t1 = omp_get_wtime();
 	for (int i = 0; i < N; i++) {
-		StepIndex != 3 ? 
-			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps)	 ], StepIndex, nsteps, pS0, R, SIG, Time) : 
+		StepIndex != 3 ?
+			stockPrice = 116.177 :// stockPricesIntegrator(stream, &wtraject[i * (nsteps)], StepIndex, nsteps, pS0, R, SIG, Time) :
 			stockPrice = stockPricesIntegrator(stream, &wtraject[i * (nsteps) * 2], StepIndex, nsteps, pS0, R, SIG, Time);
 		payoff = stockPrice - K;
 		if (payoff > 0.f)
 			sum += payoff;
 	}
 	sum = sum / N * expf(-R * Time);
+	double t2 = omp_get_wtime();
 	vslDeleteStream(&stream);
 	delete[] wtraject;
+	//std::cout << "MC EU_OP " << sum << std::endl;
+	//std::cout << "Time is " << t2 - t1 << std::endl;
 	return sum;
 }
 
 float NumSolution::getMCPricePar(int NumThreads, int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0, double& workTime) {
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
-	float* wtraject;// = memoryWrajectAlloc(stream, StepIndex, N, nsteps, Time, wtraject);
+	float* wtraject;
 		if (StepIndex != 3) {
 		wtraject = new float[N * (nsteps)];
 		vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps * N, wtraject, 0.f, sqrtf(Time/nsteps));	}
@@ -294,7 +325,7 @@ void NumSolution::MCParExecute(int StepIndex, int nsteps, int indexGen, int N, u
 	float tmp_price;
 	std::vector<double> Times;
 	std::vector<double> Prices;
-	for (int k = 1; k < 4; ++k) {
+	for (int k = 1; k < 6; ++k) {
 		for (int j = 0; j < 5; ++j) {
 
 			tmp_price = getMCPricePar(tmp, StepIndex, nsteps, indexGen, N, seed, K, R, Time, SIG, pS0, workTime);

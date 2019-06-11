@@ -1,25 +1,27 @@
 #include "AnSolution.h"
 
-float AnSolution::simulateStockPriceAn(int npaths, float s0, float r, float sig, float time, unsigned int seed, int indexGen, double workTime) {
+double AnSolution::simulateStockPriceAn(int npaths, double s0, double r, double sig, double time, unsigned int seed, int indexGen, double workTime) {
 
 	VSLStreamStatePtr stream = initGen(seed, indexGen);
-	float* dw = new float[npaths]; // random values with N(0, time) buffer
-	float stockPrice = .0f;
+	double* dw = new double[npaths]; // random values with N(0, time) buffer
+	double stockPrice = 0.0;
 	double t1, t2;
 
-	vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, npaths, dw, 0.f, sqrtf(time));
+	vdRngGaussian(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, npaths, dw, 0.0, sqrt(time));
 	t1 = omp_get_wtime();
 	//#pragma novector
 	// #pragma ivdep
 	// #pragma vector always
 	// 100% of work time of algo required on a generation of random numbers
 	for (int i = 0; i < npaths; i++) {
-		 stockPrice += (s0 * expf((r - sig * sig / 2.f) * time + sig * dw[i]));
+		 stockPrice += (s0 * exp((r - sig * sig / 2.0) * time + sig * dw[i]));
 	}
 	t2 = omp_get_wtime();	
 	workTime = t2 - t1;
 	vslDeleteStream(&stream);
 	delete[] dw;
+	std::cout << "Stock Price via An formula is " << stockPrice / npaths << std::endl;
+	std::cout << "Work Time is " << workTime << std::endl;
 	return stockPrice / npaths;
 }
 
@@ -94,17 +96,17 @@ void AnSolution::executeStockPrice(int nsteps, int npaths, float time, float pS0
 // preliminary
 void AnSolution::baseVer(float* pT, float* pK, float* pS0, float* pC, int nsamples, float r, float sig)
 {
-	//float d1, d2, p1, p2;
-	//for (int i = 0; i < nsamples; i++)
-	//{
-	//	d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
-	//		pT[i]) / (sig * sqrt(pT[i]));
-	//	d2 = (log(pS0[i] / pK[i]) + (r - sig * sig * 0.5) *
-	//		pT[i]) / (sig * sqrt(pT[i]));
-	//	vsCdfNorm(1, &d1, &p1);
-	//	vsCdfNorm(1, &d2, &p2);
-	//	pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
-	//}
+	float d1, d2, p1, p2;
+	for (int i = 0; i < nsamples; i++)
+	{
+		d1 = (log(pS0[i] / pK[i]) + (r + sig * sig * 0.5) *
+			pT[i]) / (sig * sqrt(pT[i]));
+		d2 = (log(pS0[i] / pK[i]) + (r - sig * sig * 0.5) *
+			pT[i]) / (sig * sqrt(pT[i]));
+		vsCdfNorm(1, &d1, &p1);
+		vsCdfNorm(1, &d2, &p2);
+		pC[i] = pS0[i] * p1 - pK[i] * exp((-1.0) * r * pT[i]) * p2;
+	}
 }
 
 // equivalent transformation of d[1]

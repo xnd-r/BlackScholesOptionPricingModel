@@ -3,6 +3,8 @@
 #include "NumSolution.h"
 #include "config.h"
 #include "MDim.h"
+#include <vector>
+#include <algorithm>
 
 int main(int argc, char* argv[], char* envp[]) {
 
@@ -20,6 +22,7 @@ int main(int argc, char* argv[], char* envp[]) {
 #define INDEXGEN	config.pInt("INDEXGEN")
 #define K			config.pFloat("K")		// strike price -- price fixed in option
 #define __SEED__	config.pInt("__SEED__")
+#define STEP_INDEX  config.pInt("STEP_INDEX")
 #define VERSION_INDEX config.pInt("VERSION_INDEX")
 	}
 
@@ -70,7 +73,8 @@ int main(int argc, char* argv[], char* envp[]) {
 	}
 	if (config.pBool("AN_SOLUTION_FAIR")) {
 		AnSolution as;
-		as.writeOneVersion(VERSION_INDEX, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);	// Gives concrete Fair An data in csv
+
+		//as.writeOneVersion(VERSION_INDEX, NUMTHREAD, NSAMPLES, pT, pK, pS0, pC, R, SIG, vT, vK, vS0, vC);	// Gives concrete Fair An data in csv
 	}
 	if (config.pBool("WRITE_ALL_FAIR")) {
 		AnSolution as;
@@ -83,6 +87,14 @@ int main(int argc, char* argv[], char* envp[]) {
 	}
 
 	NumSolution ns;
+	AnSolution as;
+	double t1, t2;
+	t1 = omp_get_wtime();
+	as.baseVer(pT, pK, pS0, pC, 1, R, SIG);
+	t2 = omp_get_wtime();
+	std::cout << "BS time " << t2 - t1 << std::endl;
+
+
 	delete[] sbuffer;
 	delete[] pR;
 	delete[] pT;
@@ -91,29 +103,65 @@ int main(int argc, char* argv[], char* envp[]) {
 	float* SP = new float[DIM];
 	std::cout.precision(7);
 	float eps = 1e-3f;
-	int n0 = 50;
-	float delta = 1000.f;
+
 	float I_1_n, I_1_2n;
-	//while (delta > eps) {
-	//	I_1_n = getRRNG(DIM, n0, -15.f, 6.f, 0.05f, 3.f, SP, 100.f, 100.f);
-	//	I_1_2n = getRRNG(DIM, 2 * n0, -15.f, 6.f, 0.05f, 3.f, SP, 100.f, 100.f);
-	//	delta = abs(1 / 3.f * (I_1_n - I_1_2n));
-	//	std::cout << n0 << "\t" << delta << "\t" << I_1_n << "\t" << I_1_2n << std::endl;
-	//	n0 *= 2;
+	//for (int ind = 0; ind < 4; ++ind) {
+	//	int n0 = 50;
+	//	float delta = 1000.f;
+	//	while (delta > eps) {
+	//		I_1_n = ns.SimulateStockPrices(ind, INDEXGEN, n0, NSTEPS, S0, R, SIG, TIME, __SEED__);
+	//		I_1_2n = ns.SimulateStockPrices(ind, INDEXGEN, 2 * n0, NSTEPS, S0, R, SIG, TIME, __SEED__);
+	//		delta = abs(1 / 3.f * (I_1_n - I_1_2n));
+	//		std::cout << n0 << "\t" << delta << "\t" << I_1_n << "\t" << I_1_2n << std::endl;
+	//		n0 *= 2;
+	//	}
 	//}
 	//std::cout << getRRNG(DIM, n0, -15.f, 6.f, 0.05f, 3.f, SP, 100.f, 100.f) << std::endl;
 
-	
-	n0 = 50; 
-	delta = 1000.f;
-	while (delta > eps) {
-		I_1_n = getMCPriceParNew(NUMTHREAD, 0, NSTEPS, INDEXGEN, n0, 5000, __SEED__, K, R, TIME, SIG, S0, DIM);
-		I_1_2n = getMCPriceParNew(NUMTHREAD, 0, NSTEPS, INDEXGEN, n0 * 2, 5000, __SEED__, K, R, TIME, SIG, S0, DIM);
-		delta = abs(1 / 3.f * (I_1_n - I_1_2n));
-		std::cout << n0 << "\t" << delta << "\t" << I_1_n << "\t" << I_1_2n << std::endl;
-		n0 *= 2;
-	}
+	//int n_steps = 100;
+	//for (int ind = 0; ind < 4; ++ind) {
+	//	
+	//}
 
+	//std::vector<double> times;
+	//for (int ind = 0; ind < 3; ++ind) {
+	//	for (int i = 0; i < 11; ++i) {
+	//		times.push_back(ns.SimulateStockPrices(ind, INDEXGEN, 150000, NSTEPS, S0, R, SIG, TIME, __SEED__));
+	//	}
+	//	std::sort(times.begin(), times.end());
+	//	std::cout << "Avg time is " << times[5] << std::endl;
+	//	times.clear();
+	//}
+	//float SPAn = 116.4776;
+	// euler, RK1, mil -- 150000 0.005
+	// BP -- 80000
+	// 116.177
+	t1 = omp_get_wtime();
+	ns.getMCPrice(0, 512, 0, 1, __SEED__, K, R, TIME, SIG, S0);
+	t2 = omp_get_wtime();
+	std::cout << "MC time " << t2 - t1 << std::endl;
+
+
+	
+	//Npaths for BP == 290k, enother -- 640k
+	//as.simulateStockPriceAn(NSAMPLES, S0, R, SIG, TIME, __SEED__, INDEXGEN, workTime);
+	//for (int i = 0; i < 100; ++i) {
+	//	//std::cout /*<< i * 1000 << "\t" */<< as.simulateStockPriceAn(i * 1000, 100.0, 0.05, 0.2, 3.0, __SEED__, 0, workTime) << std::endl;
+	//	//std::cout << 100 + i * 10 << "\n";
+	//	std::cout /*<< 100 + i * 10 << "\t"*/ << ns.SimulateStockPrices(3, 0, 10000 * i, 290, 100.f, 0.05f, 0.2f, 3.f, __SEED__) - 116.177 << std::endl;
+	//}
+
+	//NSTEPS for BP == 290
+	//std::cout << "\t" << as.simulateStockPriceAn(300000, S0, R, SIG, TIME, __SEED__, 0, workTime);
+	//ns.SimulateStockPrices(0, INDEXGEN, 1000000, 520, S0, R, SIG, TIME, __SEED__);
+	//ns.SimulateStockPrices(1, INDEXGEN, 1000000, 520, S0, R, SIG, TIME, __SEED__);
+	//ns.SimulateStockPrices(2, INDEXGEN, 1000000, 520, S0, R, SIG, TIME, __SEED__);
+	//ns.SimulateStockPrices(3, INDEXGEN, 1000000, 290, S0, R, SIG, TIME, __SEED__);
+	/*ns.SimulateStockPrices(3, INDEXGEN, 80000, NSTEPS, S0, R, SIG, TIME, __SEED__);*/
+	//getMCPriceParNew(NUMTHREAD, 0, NSTEPS, INDEXGEN, NSAMPLES, 5000, __SEED__, K, R, TIME, SIG, S0, DIM);
+
+	//ns.MCParExecute(STEP_INDEX, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
+	//ns.getMCPrice(STEP_INDEX, NSTEPS, INDEXGEN, NSAMPLES, __SEED__, K, R, TIME, SIG, S0);
 	delete[] SP;
 	system("pause");
 	return 0;

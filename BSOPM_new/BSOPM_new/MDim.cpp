@@ -102,14 +102,16 @@ float getMCPriceParNew(int NumThreads, int StepIndex, int nsteps, int indexGen, 
 
 		//#pragma omp for reduction(+:sum)
 		for (int ind = 0; ind < N; ++ind) {
-			vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIAN_ICDF, stream, nsteps, wtraject, dim, VSL_MATRIX_STORAGE_FULL, mean, cov);
+
+			vsRngGaussianMV(VSL_RNG_METHOD_GAUSSIANMV_ICDF, stream, nsteps, wtraject, dim, VSL_MATRIX_STORAGE_FULL, mean, cov);
 			for (int k = 0; k < nsteps; ++k) {
 				for (int j = 0; j < dim; ++j) {
 					SP[j] = SP[j] + SP[j] * (R * dt + SIG * wtraject[dim * k + j]);
-					//std::cout << wtraject[dim * k + j] << "\t" << SP[j] << std::endl;
+					//std::cout << wtraject[dim * k + j] << /*"\t" << SP[j] <<*/ std::endl;
 
 				}
 			}
+
 			maxSP = 0.f;
 			for (int i = 0; i < dim; ++i) {
 				if (SP[i] - 100.f > maxSP)
@@ -129,7 +131,7 @@ float getMCPriceParNew(int NumThreads, int StepIndex, int nsteps, int indexGen, 
 	t2 = omp_get_wtime();
 	//std::cout << "Time = " << t2 - t1 << std::endl;
 	sum = sum / N * expf(-R * Time) / dim;
-	//std::cout << "MaxCall = " << sum << std::endl;
+	std::cout << "MaxCall = " << sum << std::endl;
 
 	vslDeleteStream(&stream);
 	return sum;

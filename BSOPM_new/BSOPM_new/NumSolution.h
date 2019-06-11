@@ -37,6 +37,7 @@ protected:
 	float BurragePlatenStep(float S, float dt, float dw, float dz, float r, float sig);
 	float stockPricesIntegrator(VSLStreamStatePtr stream, float* wtraject, int StepIndex, int nsteps, float pS0, float pR, float pSig, float time);
 	float stockPricesIntegratorVol(VSLStreamStatePtr stream, float* wtraject, int StepIndex, int nsteps, float pS0, float* pR, float* pSig, float time);
+	float NumSolution::MC(int StepIndex, int nsteps, int indexGen, int N, unsigned int seed, float K, float R, float Time, float SIG, float pS0);
 };
 
 #endif // !____BLACK_SHOLES_NUMERICAL_SOLUTION____

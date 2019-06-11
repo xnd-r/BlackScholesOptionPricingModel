@@ -8,7 +8,14 @@
 *.user
 *.userosscache
 *.sln.docstates
-#*.csv
+*.csv
+*.docx
+*.doc
+*.ppt
+*.pptx
+*.pdf
+*.xlsx
+*.txt
 *.cd
 *.db
 *My Advisor Results*
